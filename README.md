@@ -1,8 +1,20 @@
 # eu-ai-act-compliance-mcp
 
+[![MCPize](https://mcpize.com/badge/@CSOAI-ORG/eu-ai-act-compliance)](https://mcpize.com/mcp/eu-ai-act-compliance)
+
 > **By [MEOK AI Labs](https://meok.ai)** — Sovereign AI tools for everyone.
 
 EU AI Act compliance checking — risk classification, 42-point audit, penalty calculator, documentation generator
+
+## Connect via MCPize
+
+Use this MCP server instantly with no local installation:
+
+```bash
+npx -y mcpize connect @CSOAI-ORG/eu-ai-act-compliance --client claude
+```
+
+Or connect at: **https://mcpize.com/mcp/eu-ai-act-compliance**
 
 ## Stats
 - 6 tools, 1393 lines
