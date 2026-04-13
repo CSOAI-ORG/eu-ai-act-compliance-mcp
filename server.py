@@ -149,7 +149,7 @@ ANNEX_III_HIGH_RISK = [
             "Decision-making on promotion, termination, task allocation",
             "Monitoring and evaluating work performance and behaviour",
         ],
-        "keywords": ["recruit", "hiring", "CV screen", "resume screen", "employee monitor", "performance review", "worker", "HR", "human resource", "workforce", "promotion", "termination"],
+        "keywords": ["recruit", "hiring", "CV screen", "resume screen", "job applicat", "applicant screen", "screen applicat", "candidate", "employee monitor", "performance review", "worker manage", "HR automat", "human resource", "workforce", "promotion", "termination", "job screen"],
     },
     {
         "area": 5,
