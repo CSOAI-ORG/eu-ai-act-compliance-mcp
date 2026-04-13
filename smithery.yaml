@@ -1,0 +1,10 @@
+name: eu-ai-act-compliance-mcp
+description: "MEOK AI Labs — By MEOK AI Labs | https://meok.ai"
+vendor: MEOK AI Labs
+homepage: https://meok.ai
+repository: https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp
+license: MIT
+categories: [Compliance, AI Governance]
+tags: [eu-ai-act, ai-regulation, compliance, regulatory-framework, ai-governance]
+runtime: python
+entrypoint: server.py

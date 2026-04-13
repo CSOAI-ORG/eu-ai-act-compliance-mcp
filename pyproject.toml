@@ -5,50 +5,25 @@ build-backend = "hatchling.build"
 [project]
 name = "eu-ai-act-compliance-mcp"
 version = "1.0.0"
-description = "EU AI Act Compliance MCP Server — automates risk classification, compliance auditing, documentation generation, and penalty assessment per Regulation (EU) 2024/1689"
+description = "MEOK AI Labs — By MEOK AI Labs | https://meok.ai"
+authors = [{name="MEOK AI Labs", email="nicholas@meok.ai"}]
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 requires-python = ">=3.10"
-authors = [
-    { name = "MEOK AI Labs", email = "hello@meok.ai" },
-]
-keywords = [
-    "eu-ai-act",
-    "ai-compliance",
-    "mcp",
-    "model-context-protocol",
-    "regulation",
-    "risk-classification",
-    "audit",
-    "gdpr",
-    "meok",
-]
+keywords = ["mcp", "mcp-server", "model-context-protocol", "claude", "ai-tools", "meok-ai-labs", "eu-ai-act", "ai-regulation", "compliance", "regulatory-framework", "ai-governance"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Legal Industry",
+    "Development Status :: 4 - Beta",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Office/Business :: Financial",
+    "Intended Audience :: Developers",
 ]
 dependencies = [
     "mcp>=1.0.0",
-    "httpx>=0.25.0",
 ]
 
 [project.urls]
 Homepage = "https://meok.ai"
-Repository = "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp"
-Documentation = "https://meok.ai/mcp/eu-ai-act"
-"Bug Tracker" = "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues"
-
-[project.scripts]
-eu-ai-act-mcp = "server:mcp.run"
-
-[tool.hatch.build.targets.wheel]
-packages = ["."]
+Repository = "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp"
+Documentation = "https://meok.ai/docs/eu-ai-act-compliance-mcp"
+"Bug Tracker" = "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues"

@@ -1,0 +1,25 @@
+{
+  "name": "eu-ai-act-compliance-mcp",
+  "description": "MEOK AI Labs \u2014 By MEOK AI Labs | https://meok.ai",
+  "vendor": "MEOK AI Labs",
+  "homepage": "https://meok.ai",
+  "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+  "runtime": "python",
+  "entrypoint": "server.py",
+  "tools": [
+    "classify_ai_risk",
+    "check_compliance",
+    "generate_documentation",
+    "assess_penalties",
+    "get_timeline",
+    "audit_report"
+  ],
+  "categories": [
+    "Compliance",
+    "AI Governance"
+  ],
+  "pricing": {
+    "free": "50 calls/day",
+    "pro": "$9/mo"
+  }
+}
