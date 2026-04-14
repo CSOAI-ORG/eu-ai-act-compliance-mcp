@@ -1,25 +1,266 @@
 {
   "name": "eu-ai-act-compliance-mcp",
-  "description": "MEOK AI Labs \u2014 By MEOK AI Labs | https://meok.ai",
-  "vendor": "MEOK AI Labs",
-  "homepage": "https://meok.ai",
-  "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
-  "runtime": "python",
-  "entrypoint": "server.py",
+  "description": "> **By [MEOK AI Labs](https://meok.ai)** \u2014 Sovereign AI tools for everyone.",
+  "version": "1.0.0",
   "tools": [
-    "classify_ai_risk",
-    "check_compliance",
-    "generate_documentation",
-    "assess_penalties",
-    "get_timeline",
-    "audit_report"
-  ],
-  "categories": [
-    "Compliance",
-    "AI Governance"
-  ],
-  "pricing": {
-    "free": "50 calls/day",
-    "pro": "$9/mo"
-  }
+    {
+      "name": "classify_ai_risk",
+      "description": "Classify an AI system's risk level under the EU AI Act.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "caller": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description"
+        ]
+      }
+    },
+    {
+      "name": "check_compliance",
+      "description": "Run an EU AI Act compliance check against Articles 9-15 requirements.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "system_name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "data_types": {
+            "type": "string"
+          },
+          "decision_scope": {
+            "type": "string"
+          },
+          "has_risk_management": {
+            "type": "boolean"
+          },
+          "has_data_governance": {
+            "type": "boolean"
+          },
+          "has_technical_docs": {
+            "type": "boolean"
+          },
+          "has_logging": {
+            "type": "boolean"
+          },
+          "has_transparency_info": {
+            "type": "boolean"
+          },
+          "has_human_oversight": {
+            "type": "boolean"
+          },
+          "has_accuracy_testing": {
+            "type": "boolean"
+          },
+          "caller": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "system_name",
+          "purpose",
+          "data_types",
+          "decision_scope"
+        ]
+      }
+    },
+    {
+      "name": "generate_documentation",
+      "description": "Generate Article 11 / Annex IV compliant technical documentation template.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "system_name": {
+            "type": "string"
+          },
+          "provider_name": {
+            "type": "string"
+          },
+          "provider_contact": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "intended_purpose": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "data_description": {
+            "type": "string"
+          },
+          "architecture_description": {
+            "type": "string"
+          },
+          "performance_metrics": {
+            "type": "string"
+          },
+          "risk_management_description": {
+            "type": "string"
+          },
+          "human_oversight_description": {
+            "type": "string"
+          },
+          "caller": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "system_name",
+          "provider_name",
+          "provider_contact",
+          "version",
+          "intended_purpose",
+          "description",
+          "data_description",
+          "architecture_description"
+        ]
+      }
+    },
+    {
+      "name": "assess_penalties",
+      "description": "Calculate potential EU AI Act penalties for a given violation type.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "violation_type": {
+            "type": "string"
+          },
+          "annual_global_turnover_eur": {
+            "type": "number"
+          },
+          "is_sme": {
+            "type": "boolean"
+          },
+          "caller": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "violation_type"
+        ]
+      }
+    },
+    {
+      "name": "get_timeline",
+      "description": "Get key EU AI Act implementation dates and deadlines.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caller": {
+            "type": "string"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "audit_report",
+      "description": "Generate a complete EU AI Act audit report.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "system_name": {
+            "type": "string"
+          },
+          "provider_name": {
+            "type": "string"
+          },
+          "provider_contact": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "data_types": {
+            "type": "string"
+          },
+          "decision_scope": {
+            "type": "string"
+          },
+          "architecture_description": {
+            "type": "string"
+          },
+          "has_risk_management": {
+            "type": "boolean"
+          },
+          "has_data_governance": {
+            "type": "boolean"
+          },
+          "has_technical_docs": {
+            "type": "boolean"
+          },
+          "has_logging": {
+            "type": "boolean"
+          },
+          "has_transparency_info": {
+            "type": "boolean"
+          },
+          "has_human_oversight": {
+            "type": "boolean"
+          },
+          "has_accuracy_testing": {
+            "type": "boolean"
+          },
+          "annual_global_turnover_eur": {
+            "type": "number"
+          },
+          "is_sme": {
+            "type": "boolean"
+          },
+          "caller": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "system_name",
+          "provider_name",
+          "provider_contact",
+          "version",
+          "purpose",
+          "description",
+          "data_types",
+          "decision_scope",
+          "architecture_description"
+        ]
+      }
+    },
+    {
+      "name": "multi_jurisdiction_map",
+      "description": "Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "article": {
+            "type": "string"
+          },
+          "jurisdictions": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "article"
+        ]
+      }
+    }
+  ]
 }

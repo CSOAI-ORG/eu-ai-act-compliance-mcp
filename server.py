@@ -463,10 +463,10 @@ def classify_ai_risk(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
 
     result = {
         "classification": "minimal",
@@ -499,7 +499,7 @@ def classify_ai_risk(
             f"or used in the EU. Penalties: up to EUR 35 million or 7% of global annual turnover "
             f"(Article 99(3)). Enforcement date: 2 February 2025."
         )
-        return json.dumps(result, indent=2)
+        return result
 
     # Check high-risk (Annex III)
     for area in ANNEX_III_HIGH_RISK:
@@ -525,7 +525,7 @@ def classify_ai_risk(
             f"A conformity assessment is required before placing on the market. "
             f"Full enforcement: 2 August 2026."
         )
-        return json.dumps(result, indent=2)
+        return result
 
     # Check limited risk (transparency obligations — Article 50)
     limited_keywords = [
@@ -547,7 +547,7 @@ def classify_ai_risk(
             f"(3) Deployers of emotion recognition/biometric categorisation must inform persons. "
             f"GPAI model providers have additional obligations under Articles 51-56."
         )
-        return json.dumps(result, indent=2)
+        return result
 
     # Minimal risk
     result["classification"] = "minimal"
@@ -559,7 +559,7 @@ def classify_ai_risk(
         "requirements. Note: classification confidence is low — provide more detail about "
         "the system's purpose, data usage, and deployment context for a more accurate assessment."
     )
-    return json.dumps(result, indent=2)
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -603,10 +603,10 @@ def check_compliance(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
 
     # First classify to determine if high-risk
     classification_context = f"{purpose} {data_types} {decision_scope}"
@@ -712,7 +712,7 @@ def check_compliance(
         "meok_labs": "https://meok.ai",
     }
 
-    return json.dumps(result, indent=2)
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -755,10 +755,10 @@ def generate_documentation(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
 
     date_str = datetime.now().strftime("%Y-%m-%d")
 
@@ -941,7 +941,7 @@ This template does not constitute legal advice — consult qualified legal couns
 *MEOK AI Labs | https://meok.ai*
 """
 
-    return json.dumps({
+    return {
         "document_format": "markdown",
         "template": doc,
         "sections_requiring_completion": [
@@ -971,7 +971,7 @@ This template does not constitute legal advice — consult qualified legal couns
         ],
         "compliance_note": "Complete all bracketed sections before submission. Article 11(1) requires documentation to be drawn up before the system is placed on the market.",
         "meok_labs": "https://meok.ai",
-    }, indent=2)
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1003,13 +1003,13 @@ def assess_penalties(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
 
     if violation_type not in PENALTY_TIERS:
-        return json.dumps({
+        return {
             "error": "invalid_violation_type",
             "message": f"Valid types: {', '.join(PENALTY_TIERS.keys())}",
             "violation_types": {
@@ -1017,7 +1017,7 @@ def assess_penalties(
                 "high_risk_obligations": "Non-compliance with Articles 9-15, registration, conformity assessment, etc.",
                 "incorrect_information": "Supplying incorrect/misleading information to notified bodies or authorities",
             },
-        }, indent=2)
+        }
 
     tier_info = PENALTY_TIERS[violation_type]
     turnover_fine = (annual_global_turnover_eur * tier_info["turnover_pct"] / 100) if annual_global_turnover_eur > 0 else 0
@@ -1065,7 +1065,7 @@ def assess_penalties(
         "meok_labs": "https://meok.ai",
     }
 
-    return json.dumps(result, indent=2)
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -1087,10 +1087,10 @@ def get_timeline(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
 
     today = datetime.now().date()
     timeline_with_status = []
@@ -1131,7 +1131,7 @@ def get_timeline(
         "meok_labs": "https://meok.ai",
     }
 
-    return json.dumps(result, indent=2)
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -1158,7 +1158,7 @@ def audit_report(
     annual_global_turnover_eur: float = 0,
     is_sme: bool = False,
     caller: str = "anonymous",
-    tier: str = "free") -> str:
+    tier: str = "free", api_key: str = "") -> str:
     """Generate a complete EU AI Act audit report.
 
     Runs classification, compliance check, documentation generation, and
@@ -1189,10 +1189,10 @@ def audit_report(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
 
     # Run sub-analyses (bypass rate limiting for internal calls)
     classification_raw = json.loads(classify_ai_risk(f"{purpose} {description} {data_types} {decision_scope}", caller, "pro"))
@@ -1411,7 +1411,7 @@ def audit_report(
 **MEOK AI Labs** | [meok.ai](https://meok.ai) | The only MCP server for EU AI Act compliance
 """
 
-    return json.dumps({
+    return {
         "format": "markdown",
         "report": report,
         "risk_classification": risk_level,
@@ -1422,7 +1422,7 @@ def audit_report(
             if item["overall_status"] == "FAIL"
         ],
         "meok_labs": "https://meok.ai",
-    }, indent=2)
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1437,10 +1437,10 @@ def multi_jurisdiction_map(
     """Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST."""
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
     limit_err = _check_rate_limit("anonymous", tier)
     if limit_err:
-        return json.dumps({"error": "rate_limited", "message": limit_err})
+        return {"error": "rate_limited", "message": limit_err}
     jurisdictions = jurisdictions or ["uk", "singapore", "canada", "us_nist"]
     MAPPINGS = {
         "Article 5": {"uk": "UK AI Act prohibited practices", "singapore": "MAS FEAT principles — fairness", "canada": "AIDA prohibited uses", "us_nist": "NIST AI RMF Govern 1.1"},
@@ -1450,7 +1450,7 @@ def multi_jurisdiction_map(
     }
     result = MAPPINGS.get(article, {})
     filtered = {k: v for k, v in result.items() if k in jurisdictions}
-    return json.dumps({"eu_ai_act_article": article, "mappings": filtered, "jurisdictions_queried": jurisdictions})
+    return {"eu_ai_act_article": article, "mappings": filtered, "jurisdictions_queried": jurisdictions}
 
 if __name__ == "__main__":
     mcp.run()
