@@ -32,6 +32,9 @@ except ImportError:
 
 # ── Authentication ──────────────────────────────────────────────
 import os as _os
+import sys, os
+sys.path.insert(0, os.path.expanduser("~/clawd/meok-labs-engine/shared"))
+from auth_middleware import check_access
 _MEOK_API_KEY = _os.environ.get("MEOK_API_KEY", "")
 
 def _check_auth(api_key: str = "") -> str | None:
@@ -443,7 +446,7 @@ JURISDICTIONS = {
 def classify_ai_risk(
     description: str,
     caller: str = "anonymous",
-    tier: str = "free") -> str:
+    api_key: str = "") -> str:
     """Classify an AI system's risk level under the EU AI Act.
 
     Takes a description of an AI system and returns its risk classification:
@@ -458,6 +461,9 @@ def classify_ai_risk(
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
     """
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return json.dumps({"error": "rate_limited", "message": limit_err})
@@ -573,7 +579,7 @@ def check_compliance(
     has_human_oversight: bool = False,
     has_accuracy_testing: bool = False,
     caller: str = "anonymous",
-    tier: str = "free") -> str:
+    api_key: str = "") -> str:
     """Run an EU AI Act compliance check against Articles 9-15 requirements.
 
     Takes system details and current compliance posture, returns a detailed
@@ -595,6 +601,9 @@ def check_compliance(
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
     """
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return json.dumps({"error": "rate_limited", "message": limit_err})
@@ -723,7 +732,7 @@ def generate_documentation(
     risk_management_description: str = "",
     human_oversight_description: str = "",
     caller: str = "anonymous",
-    tier: str = "free") -> str:
+    api_key: str = "") -> str:
     """Generate Article 11 / Annex IV compliant technical documentation template.
 
     Produces a complete markdown template following the Annex IV structure of the
@@ -744,6 +753,9 @@ def generate_documentation(
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
     """
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return json.dumps({"error": "rate_limited", "message": limit_err})
@@ -971,7 +983,7 @@ def assess_penalties(
     annual_global_turnover_eur: float = 0,
     is_sme: bool = False,
     caller: str = "anonymous",
-    tier: str = "free") -> str:
+    api_key: str = "") -> str:
     """Calculate potential EU AI Act penalties for a given violation type.
 
     Returns the applicable fine range per Article 99, considering company size
@@ -989,6 +1001,9 @@ def assess_penalties(
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
     """
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return json.dumps({"error": "rate_limited", "message": limit_err})
@@ -1059,7 +1074,7 @@ def assess_penalties(
 @mcp.tool()
 def get_timeline(
     caller: str = "anonymous",
-    tier: str = "free") -> str:
+    api_key: str = "") -> str:
     """Get key EU AI Act implementation dates and deadlines.
 
     Returns all major enforcement milestones from entry into force through
@@ -1070,6 +1085,9 @@ def get_timeline(
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
     """
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return json.dumps({"error": "rate_limited", "message": limit_err})
@@ -1169,6 +1187,9 @@ def audit_report(
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
     """
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return json.dumps({"error": "rate_limited", "message": limit_err})
