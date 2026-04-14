@@ -22,6 +22,18 @@ from mcp.server.fastmcp import FastMCP
 # ---------------------------------------------------------------------------
 # Rate limiting
 # ---------------------------------------------------------------------------
+
+# ── Authentication ──────────────────────────────────────────────
+import os as _os
+_MEOK_API_KEY = _os.environ.get("MEOK_API_KEY", "")
+
+def _check_auth(api_key: str = "") -> str | None:
+    """Check API key if MEOK_API_KEY is set. Returns error or None."""
+    if _MEOK_API_KEY and api_key != _MEOK_API_KEY:
+        return "Invalid API key. Get one at https://meok.ai/api-keys"
+    return None
+
+
 FREE_DAILY_LIMIT = 10
 PRO_TIER_UNLIMITED = True  # Pro: $29/mo unlimited at https://meok.ai/mcp/eu-ai-act/pro
 _usage: dict[str, list[datetime]] = defaultdict(list)
@@ -409,6 +421,17 @@ def _match_keywords(text: str, keywords: list[str]) -> list[str]:
 # ---------------------------------------------------------------------------
 # Tool 1: classify_ai_risk
 # ---------------------------------------------------------------------------
+
+
+# ── Multi-Jurisdiction Support ────────────────────────────────
+JURISDICTIONS = {
+    "eu": {"name": "European Union", "framework": "EU AI Act (Regulation 2024/1689)", "enforcement": "August 2, 2026", "penalty_max": "EUR 35M or 7% global turnover"},
+    "uk": {"name": "United Kingdom", "framework": "UK AI Act (expected mid-2026)", "enforcement": "TBD — legislation pending", "penalty_max": "TBD"},
+    "canada": {"name": "Canada", "framework": "AIDA (Artificial Intelligence and Data Act)", "enforcement": "Expected 2026", "penalty_max": "CAD 25M or 5% global revenue"},
+    "singapore": {"name": "Singapore", "framework": "AI Governance Framework + Agentic AI", "enforcement": "Voluntary (mandatory for financial services)", "penalty_max": "Sector-specific"},
+    "us_nist": {"name": "United States (NIST)", "framework": "NIST AI RMF 1.0", "enforcement": "Voluntary (mandatory for federal agencies)", "penalty_max": "N/A (framework, not law)"},
+}
+
 @mcp.tool()
 def classify_ai_risk(
     description: str,
