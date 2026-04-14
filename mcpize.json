@@ -1,0 +1,18 @@
+{
+  "name": "eu-ai-act-compliance",
+  "displayName": "EU AI Act Compliance MCP",
+  "description": "The only MCP server that automates EU AI Act risk classification, 42-point compliance auditing, penalty assessment, and documentation generation. Full enforcement August 2, 2026.",
+  "version": "1.0.0",
+  "author": "MEOK AI Labs",
+  "homepage": "https://meok.ai",
+  "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+  "pricing": {
+    "model": "freemium",
+    "free": { "callsPerDay": 10 },
+    "pro": { "price": 29, "currency": "GBP", "interval": "month" }
+  },
+  "categories": ["compliance", "governance", "legal", "ai-safety"],
+  "tags": ["eu-ai-act", "compliance", "regulation", "audit", "risk-classification", "gdpr"],
+  "runtime": "python",
+  "entrypoint": "server.py"
+}

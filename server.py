@@ -396,12 +396,7 @@ PENALTY_TIERS = {
 # ---------------------------------------------------------------------------
 mcp = FastMCP(
     "EU AI Act Compliance",
-    description=(
-        "By MEOK AI Labs (https://meok.ai) — The only MCP server that automates "
-        "EU AI Act compliance checking. Classifies AI system risk levels, audits "
-        "compliance against Articles 9-15, generates Annex IV documentation, "
-        "calculates penalties, and tracks enforcement deadlines per Regulation (EU) 2024/1689."
-    ),
+    instructions="By MEOK AI Labs — The only MCP server that automates EU AI Act compliance checking. Risk classification, 42-point audit, documentation, penalties, deadlines."
 )
 
 
@@ -418,8 +413,7 @@ def _match_keywords(text: str, keywords: list[str]) -> list[str]:
 def classify_ai_risk(
     description: str,
     caller: str = "anonymous",
-    tier: str = "free",
-) -> str:
+    tier: str = "free") -> str:
     """Classify an AI system's risk level under the EU AI Act.
 
     Takes a description of an AI system and returns its risk classification:
@@ -549,8 +543,7 @@ def check_compliance(
     has_human_oversight: bool = False,
     has_accuracy_testing: bool = False,
     caller: str = "anonymous",
-    tier: str = "free",
-) -> str:
+    tier: str = "free") -> str:
     """Run an EU AI Act compliance check against Articles 9-15 requirements.
 
     Takes system details and current compliance posture, returns a detailed
@@ -700,8 +693,7 @@ def generate_documentation(
     risk_management_description: str = "",
     human_oversight_description: str = "",
     caller: str = "anonymous",
-    tier: str = "free",
-) -> str:
+    tier: str = "free") -> str:
     """Generate Article 11 / Annex IV compliant technical documentation template.
 
     Produces a complete markdown template following the Annex IV structure of the
@@ -949,8 +941,7 @@ def assess_penalties(
     annual_global_turnover_eur: float = 0,
     is_sme: bool = False,
     caller: str = "anonymous",
-    tier: str = "free",
-) -> str:
+    tier: str = "free") -> str:
     """Calculate potential EU AI Act penalties for a given violation type.
 
     Returns the applicable fine range per Article 99, considering company size
@@ -1038,8 +1029,7 @@ def assess_penalties(
 @mcp.tool()
 def get_timeline(
     caller: str = "anonymous",
-    tier: str = "free",
-) -> str:
+    tier: str = "free") -> str:
     """Get key EU AI Act implementation dates and deadlines.
 
     Returns all major enforcement milestones from entry into force through
@@ -1120,8 +1110,7 @@ def audit_report(
     annual_global_turnover_eur: float = 0,
     is_sme: bool = False,
     caller: str = "anonymous",
-    tier: str = "free",
-) -> str:
+    tier: str = "free") -> str:
     """Generate a complete EU AI Act audit report.
 
     Runs classification, compliance check, documentation generation, and
@@ -1160,8 +1149,7 @@ def audit_report(
         system_name, purpose, data_types, decision_scope,
         has_risk_management, has_data_governance, has_technical_docs,
         has_logging, has_transparency_info, has_human_oversight,
-        has_accuracy_testing, caller, "pro",
-    ))
+        has_accuracy_testing, caller, "pro"))
 
     risk_level = classification_raw.get("classification", "unknown")
 
