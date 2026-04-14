@@ -1428,5 +1428,29 @@ def audit_report(
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
+@mcp.tool()
+def multi_jurisdiction_map(
+    article: str,
+    jurisdictions: list = None,
+    api_key: str = "") -> str:
+    """Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST."""
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+    limit_err = _check_rate_limit("anonymous", tier)
+    if limit_err:
+        return json.dumps({"error": "rate_limited", "message": limit_err})
+    jurisdictions = jurisdictions or ["uk", "singapore", "canada", "us_nist"]
+    MAPPINGS = {
+        "Article 5": {"uk": "UK AI Act prohibited practices", "singapore": "MAS FEAT principles — fairness", "canada": "AIDA prohibited uses", "us_nist": "NIST AI RMF Govern 1.1"},
+        "Article 6": {"uk": "UK AI Act high-risk classification", "singapore": "IMDA PDPC guidelines", "canada": "AIDA high-impact systems", "us_nist": "NIST AI RMF Map 1.2"},
+        "Article 9": {"uk": "UK AI Act risk management", "singapore": "Veritas fairness assessment", "canada": "AIDA risk mitigation", "us_nist": "NIST AI RMF Manage 2.1"},
+        "Article 14": {"uk": "UK AI Act human oversight", "singapore": "AI Governance Framework — human-in-the-loop", "canada": "AIDA human oversight", "us_nist": "NIST AI RMF Govern 3.1"},
+    }
+    result = MAPPINGS.get(article, {})
+    filtered = {k: v for k, v in result.items() if k in jurisdictions}
+    return json.dumps({"eu_ai_act_article": article, "mappings": filtered, "jurisdictions_queried": jurisdictions})
+
 if __name__ == "__main__":
     mcp.run()
