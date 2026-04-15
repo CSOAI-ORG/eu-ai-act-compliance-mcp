@@ -1,0 +1,10 @@
+{
+  "name": "eu-ai-act-compliance-mcp",
+  "description": "MEOK AI Labs \u2014 eu-ai-act-compliance-mcp",
+  "vendor": "MEOK AI Labs",
+  "homepage": "https://meok.ai",
+  "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+  "license": "MIT",
+  "runtime": "python",
+  "entryPoint": "mcp-wrapper.py"
+}

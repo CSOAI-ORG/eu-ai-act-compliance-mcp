@@ -25,3 +25,6 @@ Repository = "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp"
 [tool.hatch.build.targets.wheel]
 packages = ["."]
 only-include = ["server.py"]
+
+[project.scripts]
+eu_ai_act_compliance_mcp = "server:main"
