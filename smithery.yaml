@@ -1,6 +1,6 @@
 name: eu-ai-act-compliance-mcp
-description: "By MEOK AI Labs \u2014 The only MCP server that automates EU AI Act\
-  \ compliance checking. Risk classificat"
+description: 'Eu Ai Act Compliance tools for AI agents. Capabilities: classify ai
+  risk, check compliance, generate documentation. Built by MEOK AI Labs.'
 version: 1.0.0
 tools:
 - name: classify_ai_risk

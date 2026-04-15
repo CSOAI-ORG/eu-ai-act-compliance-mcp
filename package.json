@@ -1,7 +1,7 @@
 {
   "name": "eu-ai-act-compliance-mcp",
   "version": "1.0.0",
-  "description": "The only MCP server that automates EU AI Act risk classification, 42-point compliance auditing, penalty assessment, and documentation generation. By MEOK AI Labs.",
+  "description": "Eu Ai Act Compliance tools for AI agents. Capabilities: classify ai risk, check compliance, generate documentation. Built by MEOK AI Labs.",
   "main": "server.py",
   "mcp": {
     "name": "EU AI Act Compliance",
@@ -9,10 +9,30 @@
     "homepage": "https://meok.ai",
     "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
     "runtime": "python",
-    "categories": ["compliance", "governance", "legal", "ai-safety"],
-    "tags": ["eu-ai-act", "compliance", "regulation", "audit", "risk-classification", "gdpr", "meok-ai-labs"]
+    "categories": [
+      "compliance",
+      "governance",
+      "legal",
+      "ai-safety"
+    ],
+    "tags": [
+      "eu-ai-act",
+      "compliance",
+      "regulation",
+      "audit",
+      "risk-classification",
+      "gdpr",
+      "meok-ai-labs"
+    ]
   },
-  "keywords": ["mcp", "mcp-server", "eu-ai-act", "compliance", "ai-safety", "meok"],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "eu-ai-act",
+    "compliance",
+    "ai-safety",
+    "meok"
+  ],
   "author": "MEOK AI Labs <nicholas@meok.ai>",
   "license": "MIT",
   "homepage": "https://meok.ai",
