@@ -35,7 +35,9 @@ import os as _os
 import sys, os
 sys.path.insert(0, os.path.expanduser("~/clawd/meok-labs-engine/shared"))
 from auth_middleware import check_access
+from compliance_neural import ComplianceNeuralNet
 _MEOK_API_KEY = _os.environ.get("MEOK_API_KEY", "")
+_neural_net = ComplianceNeuralNet("eu-ai-act")
 
 def _check_auth(api_key: str = "") -> str | None:
     """Check API key if MEOK_API_KEY is set. Returns error or None."""
@@ -711,6 +713,33 @@ def check_compliance(
         "regulation": "Regulation (EU) 2024/1689",
         "meok_labs": "https://meok.ai",
     }
+
+    # Neural learning: train from this compliance check
+    try:
+        features = _neural_net.extract_features_from_system(
+            system_name=system_name,
+            uses_biometric="biometric" in data_types.lower(),
+            uses_health_data="health" in data_types.lower(),
+            uses_financial_data="financial" in data_types.lower() or "credit" in data_types.lower(),
+            has_human_oversight=has_human_oversight,
+            has_documentation=has_technical_docs,
+            deployed_cross_border=False,
+            model_explainable=True,
+        )
+        outcome = {
+            "overall_risk_score": 1.0 if is_prohibited else (0.8 if is_high_risk else 0.4),
+            "violation_probability": failed / max(1, total_checks),
+            "remediation_urgency": 1.0 if is_prohibited else (failed / max(1, total_checks)),
+            "audit_priority": 0.9 if is_prohibited else (0.7 if is_high_risk else 0.3),
+        }
+        learn_result = _neural_net.learn_from_check(features, outcome)
+        result["neural_learning"] = {
+            "trained": True,
+            "loss": learn_result["loss"],
+            "checks_learned_from": learn_result["check_number"],
+        }
+    except Exception:
+        result["neural_learning"] = {"trained": False, "reason": "learning module unavailable"}
 
     return result
 
@@ -1451,6 +1480,59 @@ def multi_jurisdiction_map(
     result = MAPPINGS.get(article, {})
     filtered = {k: v for k, v in result.items() if k in jurisdictions}
     return {"eu_ai_act_article": article, "mappings": filtered, "jurisdictions_queried": jurisdictions}
+
+@mcp.tool()
+def predict_risk_neural(
+    system_name: str,
+    system_type: str = "",
+    uses_biometric: bool = False,
+    uses_health_data: bool = False,
+    uses_financial_data: bool = False,
+    has_human_oversight: bool = True,
+    affected_users: int = 0,
+    sector: str = "",
+    has_documentation: bool = False,
+    prior_incidents: int = 0,
+    deployed_cross_border: bool = False,
+    model_explainable: bool = True,
+    api_key: str = "") -> dict:
+    """Neural network-based risk prediction that improves from every compliance check. Predicts overall risk, violation probability, remediation urgency, and audit priority."""
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+    limit_err = _check_rate_limit("anonymous", tier)
+    if limit_err:
+        return {"error": "rate_limited", "message": limit_err}
+
+    features = _neural_net.extract_features_from_system(
+        system_name=system_name,
+        system_type=system_type,
+        uses_biometric=uses_biometric,
+        uses_health_data=uses_health_data,
+        uses_financial_data=uses_financial_data,
+        has_human_oversight=has_human_oversight,
+        affected_users=affected_users,
+        sector=sector,
+        has_documentation=has_documentation,
+        prior_incidents=prior_incidents,
+        deployed_cross_border=deployed_cross_border,
+        model_explainable=model_explainable,
+    )
+
+    prediction = _neural_net.predict_risk(features)
+    prediction["system_name"] = system_name
+    prediction["features_used"] = features
+    return prediction
+
+
+@mcp.tool()
+def neural_insights(api_key: str = "") -> dict:
+    """Get aggregate learning insights from the neural compliance model — training history, maturity, and common risk patterns."""
+    allowed, msg, tier = check_access(api_key)
+    if not allowed:
+        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+    return _neural_net.get_insights()
+
 
 if __name__ == "__main__":
     mcp.run()
