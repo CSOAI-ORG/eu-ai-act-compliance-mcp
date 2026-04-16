@@ -19,40 +19,48 @@ from typing import Optional
 from collections import defaultdict
 from mcp.server.fastmcp import FastMCP
 
-# Tier authentication (connects to Stripe subscriptions)
-try:
-    from auth_middleware import get_tier_from_api_key, Tier, TIER_LIMITS
-    AUTH_AVAILABLE = True
-except ImportError:
-    AUTH_AVAILABLE = False  # Runs without auth in dev mode
-
-# ---------------------------------------------------------------------------
-# Rate limiting
-# ---------------------------------------------------------------------------
-
 # ── Authentication ──────────────────────────────────────────────
 import os as _os
 import sys, os
-sys.path.insert(0, os.path.expanduser("~/clawd/meok-labs-engine/shared"))
-from auth_middleware import check_access
-from compliance_neural import ComplianceNeuralNet
+
+# Optional: connect to MEOK Labs shared auth + neural net if available
 _MEOK_API_KEY = _os.environ.get("MEOK_API_KEY", "")
-_neural_net = ComplianceNeuralNet("eu-ai-act")
+_neural_net = None
 
-def _check_auth(api_key: str = "") -> str | None:
-    """Check API key if MEOK_API_KEY is set. Returns error or None."""
-    if _MEOK_API_KEY and api_key != _MEOK_API_KEY:
-        return "Invalid API key. Get one at https://meok.ai/api-keys"
-    return None
+try:
+    sys.path.insert(0, os.path.expanduser("~/clawd/meok-labs-engine/shared"))
+    from auth_middleware import check_access as _shared_check_access
+    from compliance_neural import ComplianceNeuralNet
+    _neural_net = ComplianceNeuralNet("eu-ai-act")
+    _AUTH_ENGINE_AVAILABLE = True
+except ImportError:
+    _AUTH_ENGINE_AVAILABLE = False
+
+    def _shared_check_access(api_key: str = ""):
+        """Fallback when shared auth engine is not available."""
+        if _MEOK_API_KEY and api_key and api_key == _MEOK_API_KEY:
+            return True, "OK", "pro"
+        if _MEOK_API_KEY and api_key and api_key != _MEOK_API_KEY:
+            return False, "Invalid API key. Get one at https://meok.ai/api-keys", "free"
+        return True, "OK", "free"
 
 
+def check_access(api_key: str = ""):
+    """Unified access check — works with or without shared auth engine."""
+    return _shared_check_access(api_key)
+
+
+# ---------------------------------------------------------------------------
+# Rate limiting — works with ZERO configuration. No API key needed for first
+# FREE_DAILY_LIMIT calls per day.
+# ---------------------------------------------------------------------------
 FREE_DAILY_LIMIT = 10
 PRO_TIER_UNLIMITED = True  # Pro: $29/mo unlimited at https://meok.ai/mcp/eu-ai-act/pro
 _usage: dict[str, list[datetime]] = defaultdict(list)
 
 
 def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional[str]:
-    """Returns error string if rate-limited, else None."""
+    """Returns error string if rate-limited, else None. No API key required for free tier."""
     if tier == "pro":
         return None
     now = datetime.now()
@@ -420,7 +428,7 @@ PENALTY_TIERS = {
 # ---------------------------------------------------------------------------
 mcp = FastMCP(
     "EU AI Act Compliance",
-    instructions="By MEOK AI Labs — The only MCP server that automates EU AI Act compliance checking. Risk classification, 42-point audit, documentation, penalties, deadlines."
+    instructions="By MEOK AI Labs — EU AI Act compliance automation. Start with quick_scan (one sentence, instant result) or deadline_check (zero parameters). Full tools: risk classification, 42-point audit, Annex IV documentation, penalty calculator, multi-jurisdiction mapping. No API key needed for free tier (10 calls/day)."
 )
 
 
@@ -428,6 +436,156 @@ def _match_keywords(text: str, keywords: list[str]) -> list[str]:
     """Return matched keywords found in text (case-insensitive)."""
     text_lower = text.lower()
     return [kw for kw in keywords if kw.lower() in text_lower]
+
+
+# ---------------------------------------------------------------------------
+# Tool: quick_scan — ZERO config, no API key, instant result
+# ---------------------------------------------------------------------------
+@mcp.tool()
+def quick_scan(description: str) -> dict:
+    """One-sentence AI system description -> instant EU AI Act risk classification and top obligations. No API key required."""
+    limit_err = _check_rate_limit("quick_scan_anonymous")
+    if limit_err:
+        return {"error": "rate_limited", "message": limit_err}
+
+    risk_level = "minimal"
+    matched_areas = []
+    top_obligations = []
+    penalty_range = "None for minimal risk systems"
+    deadline = "No mandatory deadline for minimal risk"
+
+    # Check prohibited (Article 5)
+    for practice in PROHIBITED_PRACTICES:
+        matches = _match_keywords(description, practice["keywords"])
+        if matches:
+            matched_areas.append(f"{practice['article']}: {practice['description']}")
+
+    if matched_areas:
+        risk_level = "prohibited"
+        top_obligations = [
+            "CEASE deployment immediately — system is banned under Article 5",
+            "Seek legal counsel on whether any narrow exceptions apply",
+            "Report to national supervisory authority if already deployed",
+        ]
+        penalty_range = "Up to EUR 35,000,000 or 7% of global annual turnover"
+        deadline = "2 February 2025 (ALREADY IN EFFECT)"
+        return {
+            "risk_level": risk_level,
+            "matched_areas": matched_areas,
+            "top_3_obligations": top_obligations,
+            "deadline": deadline,
+            "penalty_range": penalty_range,
+            "regulation": "Regulation (EU) 2024/1689",
+            "next_step": "Use classify_ai_risk for detailed analysis or check_compliance for full audit",
+            "meok_labs": "https://meok.ai",
+        }
+
+    # Check high-risk (Annex III)
+    for area in ANNEX_III_HIGH_RISK:
+        matches = _match_keywords(description, area["keywords"])
+        if matches:
+            matched_areas.append(f"Annex III Area {area['area']}: {area['title']}")
+
+    if matched_areas:
+        risk_level = "high-risk"
+        top_obligations = [
+            "Establish risk management system (Article 9) and data governance (Article 10)",
+            "Create Annex IV technical documentation and implement logging (Articles 11-12)",
+            "Ensure human oversight, transparency, and accuracy testing (Articles 13-15)",
+        ]
+        penalty_range = "Up to EUR 15,000,000 or 3% of global annual turnover"
+        deadline = "2 August 2026"
+    else:
+        # Check limited risk
+        limited_keywords = [
+            "chatbot", "chat bot", "conversational ai", "virtual assistant",
+            "deepfake", "synthetic media", "generated image", "generated video",
+            "generated text", "generative ai", "foundation model", "large language model", "llm",
+        ]
+        limited_matches = _match_keywords(description, limited_keywords)
+        if limited_matches:
+            risk_level = "limited-risk"
+            matched_areas = [f"Transparency trigger: {kw}" for kw in limited_matches]
+            top_obligations = [
+                "Inform users they are interacting with AI (Article 50)",
+                "Label AI-generated content as artificially generated (Article 50)",
+                "GPAI providers: comply with Articles 51-56 (if applicable)",
+            ]
+            penalty_range = "Up to EUR 15,000,000 or 3% of global annual turnover"
+            deadline = "2 August 2025 (GPAI rules)"
+        else:
+            top_obligations = [
+                "No mandatory obligations — voluntary codes of conduct encouraged (Article 95)",
+                "Monitor EU AI Office for delegated acts that may reclassify your system",
+                "Consider voluntary adoption of high-risk requirements for trust",
+            ]
+
+    return {
+        "risk_level": risk_level,
+        "matched_areas": matched_areas,
+        "top_3_obligations": top_obligations,
+        "deadline": deadline,
+        "penalty_range": penalty_range,
+        "regulation": "Regulation (EU) 2024/1689",
+        "next_step": "Use classify_ai_risk for detailed analysis or check_compliance for full audit",
+        "meok_labs": "https://meok.ai",
+    }
+
+
+# ---------------------------------------------------------------------------
+# Tool: deadline_check — ZERO parameters, instant deadlines
+# ---------------------------------------------------------------------------
+@mcp.tool()
+def deadline_check() -> dict:
+    """All EU AI Act enforcement deadlines with days remaining. No parameters needed."""
+    today = datetime.now().date()
+    deadlines = []
+    next_upcoming = None
+
+    for entry in EU_AI_ACT_TIMELINE:
+        deadline_date = datetime.strptime(entry["date"], "%Y-%m-%d").date()
+        days_remaining = (deadline_date - today).days
+
+        if days_remaining < 0:
+            status = "IN EFFECT"
+            urgency = "past"
+        elif days_remaining == 0:
+            status = "EFFECTIVE TODAY"
+            urgency = "critical"
+        elif days_remaining <= 90:
+            status = "IMMINENT"
+            urgency = "critical"
+        elif days_remaining <= 365:
+            status = "APPROACHING"
+            urgency = "high"
+        else:
+            status = "UPCOMING"
+            urgency = "normal"
+
+        deadline_entry = {
+            "date": entry["date"],
+            "event": entry["event"],
+            "article": entry["article"],
+            "days_remaining": days_remaining,
+            "status": status,
+            "urgency": urgency,
+        }
+        deadlines.append(deadline_entry)
+
+        if days_remaining > 0 and next_upcoming is None:
+            next_upcoming = deadline_entry
+
+    return {
+        "assessment_date": today.isoformat(),
+        "next_deadline": next_upcoming,
+        "deadlines": deadlines,
+        "regulation": "Regulation (EU) 2024/1689",
+        "key_message": (
+            f"Next deadline: {next_upcoming['date']} — {next_upcoming['event']} "
+            f"({next_upcoming['days_remaining']} days remaining)"
+        ) if next_upcoming else "All EU AI Act deadlines have passed — full enforcement is in effect.",
+        "meok_labs": "https://meok.ai",
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -714,32 +872,35 @@ def check_compliance(
         "meok_labs": "https://meok.ai",
     }
 
-    # Neural learning: train from this compliance check
-    try:
-        features = _neural_net.extract_features_from_system(
-            system_name=system_name,
-            uses_biometric="biometric" in data_types.lower(),
-            uses_health_data="health" in data_types.lower(),
-            uses_financial_data="financial" in data_types.lower() or "credit" in data_types.lower(),
-            has_human_oversight=has_human_oversight,
-            has_documentation=has_technical_docs,
-            deployed_cross_border=False,
-            model_explainable=True,
-        )
-        outcome = {
-            "overall_risk_score": 1.0 if is_prohibited else (0.8 if is_high_risk else 0.4),
-            "violation_probability": failed / max(1, total_checks),
-            "remediation_urgency": 1.0 if is_prohibited else (failed / max(1, total_checks)),
-            "audit_priority": 0.9 if is_prohibited else (0.7 if is_high_risk else 0.3),
-        }
-        learn_result = _neural_net.learn_from_check(features, outcome)
-        result["neural_learning"] = {
-            "trained": True,
-            "loss": learn_result["loss"],
-            "checks_learned_from": learn_result["check_number"],
-        }
-    except Exception:
-        result["neural_learning"] = {"trained": False, "reason": "learning module unavailable"}
+    # Neural learning: train from this compliance check (if neural engine available)
+    if _neural_net is not None:
+        try:
+            features = _neural_net.extract_features_from_system(
+                system_name=system_name,
+                uses_biometric="biometric" in data_types.lower(),
+                uses_health_data="health" in data_types.lower(),
+                uses_financial_data="financial" in data_types.lower() or "credit" in data_types.lower(),
+                has_human_oversight=has_human_oversight,
+                has_documentation=has_technical_docs,
+                deployed_cross_border=False,
+                model_explainable=True,
+            )
+            outcome = {
+                "overall_risk_score": 1.0 if is_prohibited else (0.8 if is_high_risk else 0.4),
+                "violation_probability": failed / max(1, total_checks),
+                "remediation_urgency": 1.0 if is_prohibited else (failed / max(1, total_checks)),
+                "audit_priority": 0.9 if is_prohibited else (0.7 if is_high_risk else 0.3),
+            }
+            learn_result = _neural_net.learn_from_check(features, outcome)
+            result["neural_learning"] = {
+                "trained": True,
+                "loss": learn_result["loss"],
+                "checks_learned_from": learn_result["check_number"],
+            }
+        except Exception:
+            result["neural_learning"] = {"trained": False, "reason": "learning error"}
+    else:
+        result["neural_learning"] = {"trained": False, "reason": "neural engine not available"}
 
     return result
 
@@ -1504,6 +1665,9 @@ def predict_risk_neural(
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
 
+    if _neural_net is None:
+        return {"error": "Neural engine not available. Install meok-labs-engine for neural predictions.", "system_name": system_name}
+
     features = _neural_net.extract_features_from_system(
         system_name=system_name,
         system_type=system_type,
@@ -1531,8 +1695,15 @@ def neural_insights(api_key: str = "") -> dict:
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+    if _neural_net is None:
+        return {"error": "Neural engine not available. Install meok-labs-engine for neural insights."}
     return _neural_net.get_insights()
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the eu-ai-act-compliance-mcp command."""
     mcp.run()
+
+
+if __name__ == "__main__":
+    main()

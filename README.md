@@ -10,25 +10,57 @@ The only MCP server that automates EU AI Act compliance checking. Classify AI ri
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| `classify_ai_risk` | Classify an AI system's risk level under the EU AI Act |
-| `check_compliance` | Run compliance check against Articles 9-15 requirements |
-| `generate_documentation` | Generate Article 11 / Annex IV compliant technical documentation |
-| `assess_penalties` | Calculate potential penalties for a given violation type |
-| `get_timeline` | Get key EU AI Act implementation dates and deadlines |
-| `audit_report` | Generate a complete EU AI Act audit report |
+| Tool | Parameters | Description |
+|------|------------|-------------|
+| `quick_scan` | `description` (one sentence) | Instant risk classification + top 3 obligations. **No API key needed.** |
+| `deadline_check` | None | All EU AI Act deadlines with days remaining. **No parameters needed.** |
+| `classify_ai_risk` | `description` | Full risk classification with Article 5 + Annex III matching |
+| `check_compliance` | system details + 7 booleans | 42-point compliance audit against Articles 9-15 |
+| `generate_documentation` | system details | Generate Annex IV technical documentation template |
+| `assess_penalties` | `violation_type`, turnover | Calculate penalty exposure per Article 99 |
+| `get_timeline` | None | All enforcement milestones with status |
+| `audit_report` | system details | Complete audit: classification + compliance + penalties + timeline |
+| `multi_jurisdiction_map` | `article` | Map EU AI Act articles to UK, Singapore, Canada, US NIST equivalents |
+| `predict_risk_neural` | system attributes | Neural network risk prediction (improves over time) |
+| `neural_insights` | None | Aggregate learning insights from neural compliance model |
 
 ## Quick Start
 
 ```bash
+# Install and run (one command)
 pip install mcp
 git clone https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp.git
 cd eu-ai-act-compliance-mcp
 python server.py
 ```
 
+Or install as a package:
+
+```bash
+pip install eu-ai-act-compliance-mcp
+eu-ai-act-compliance-mcp
+```
+
 ## Claude Desktop Config
+
+Add this to your Claude Desktop configuration file:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+### Option A: pip install (recommended)
+
+```json
+{
+  "mcpServers": {
+    "eu-ai-act-compliance": {
+      "command": "eu-ai-act-compliance-mcp"
+    }
+  }
+}
+```
+
+### Option B: From source
 
 ```json
 {
@@ -41,6 +73,21 @@ python server.py
   }
 }
 ```
+
+### Option C: uvx (no install needed)
+
+```json
+{
+  "mcpServers": {
+    "eu-ai-act-compliance": {
+      "command": "uvx",
+      "args": ["eu-ai-act-compliance-mcp"]
+    }
+  }
+}
+```
+
+After adding the config, restart Claude Desktop. Then ask: *"Quick scan: chatbot that screens job applicants"*
 
 ## Pricing
 
