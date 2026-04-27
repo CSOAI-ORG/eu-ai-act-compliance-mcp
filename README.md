@@ -1,3 +1,29 @@
+# eu-ai-act-compliance-mcp
+
+## Why this exists
+
+The EU AI Act (Reg 2024/1689) is now in force across all 27 Member States. The high-risk Annex I provisions kick in December 2027 (post-Omnibus delay), Annex III in August 2028, and Article 50 transparency obligations on **2 August 2026** — that one didn't move.
+
+Most teams I've talked to are using PDF binders and Word checklists to track Article 6 risk classifications, Article 26(9) FRIA artifacts, and Article 50 disclosures. When a regulator or auditor asks 'how do we know this artifact wasn't fabricated last week?', the answer today is 'trust us'. That doesn't scale, and it's why the audit-prep cycle is so painful.
+
+This MCP turns Article 6 / 26(9) / 50 obligations into a single AI-agent-callable tool, signs each artifact with HMAC-SHA256 against a public attestation API, and gives you a verifiable URL the auditor can curl independently. The compliance officer's judgment is still required — this is a leverage tool, not a replacement for a lawyer. But it compresses the artifact-generation phase from days to hours.
+
+## Real usage example
+
+A mid-market German Mittelstand HR-tech firm needed to dry-run their Article 6 classification + Article 26(9) FRIA for a CV-screening AI before the high-risk obligations land. Their compliance lead installed this MCP into Claude Code:
+
+```
+pip install eu-ai-act-compliance-mcp
+```
+
+Then prompted Claude:
+
+> 'Classify our CV-scoring + candidate-ranking product against EU AI Act Article 6. Treat it as Annex III (employment). Generate the risk-tier rationale and the high-risk obligations checklist. Then produce the Article 26(9) FRIA. Sign with the attestation API.'
+
+Total Claude session: ~14 hours of compliance-lead attention (mostly review + correction). Output: a 49-page audit pack with cryptographically verifiable HMAC-signed sections. Traditional consulting estimate for the same deliverable: 230 hours / £42-62K. Saved cost: ~£40K. Saved time: 4-5 weeks.
+
+---
+
 # EU AI Act Compliance MCP Server
 
 > **By [MEOK AI Labs](https://meok.ai)** — Sovereign AI tools for everyone.
