@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "eu-ai-act-compliance-mcp"
-version = "1.1.0"
+version = "1.2.3"
 description = "EU AI Act compliance for AI agents. Instant risk scan, deadline tracker, 42-point audit, documentation generator, penalty calculator. Zero-config free tier. Built by MEOK AI Labs."
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
