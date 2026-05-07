@@ -1,0 +1,186 @@
+name: eu-ai-act-compliance-mcp
+description: 'Eu Ai Act Compliance tools for AI agents. Capabilities: classify ai
+  risk, check compliance, generate documentation. Built by MEOK AI Labs.'
+version: 1.0.0
+tools:
+- name: classify_ai_risk
+  description: Classify an AI system's risk level under the EU AI Act.
+  parameters:
+  - name: description
+    type: string
+    required: true
+  - name: caller
+    type: string
+    required: false
+- name: check_compliance
+  description: Run an EU AI Act compliance check against Articles 9-15 requirements.
+  parameters:
+  - name: system_name
+    type: string
+    required: true
+  - name: purpose
+    type: string
+    required: true
+  - name: data_types
+    type: string
+    required: true
+  - name: decision_scope
+    type: string
+    required: true
+  - name: has_risk_management
+    type: boolean
+    required: false
+  - name: has_data_governance
+    type: boolean
+    required: false
+  - name: has_technical_docs
+    type: boolean
+    required: false
+  - name: has_logging
+    type: boolean
+    required: false
+  - name: has_transparency_info
+    type: boolean
+    required: false
+  - name: has_human_oversight
+    type: boolean
+    required: false
+  - name: has_accuracy_testing
+    type: boolean
+    required: false
+  - name: caller
+    type: string
+    required: false
+- name: generate_documentation
+  description: Generate Article 11 / Annex IV compliant technical documentation template.
+  parameters:
+  - name: system_name
+    type: string
+    required: true
+  - name: provider_name
+    type: string
+    required: true
+  - name: provider_contact
+    type: string
+    required: true
+  - name: version
+    type: string
+    required: true
+  - name: intended_purpose
+    type: string
+    required: true
+  - name: description
+    type: string
+    required: true
+  - name: data_description
+    type: string
+    required: true
+  - name: architecture_description
+    type: string
+    required: true
+  - name: performance_metrics
+    type: string
+    required: false
+  - name: risk_management_description
+    type: string
+    required: false
+  - name: human_oversight_description
+    type: string
+    required: false
+  - name: caller
+    type: string
+    required: false
+- name: assess_penalties
+  description: Calculate potential EU AI Act penalties for a given violation type.
+  parameters:
+  - name: violation_type
+    type: string
+    required: true
+  - name: annual_global_turnover_eur
+    type: number
+    required: false
+  - name: is_sme
+    type: boolean
+    required: false
+  - name: caller
+    type: string
+    required: false
+- name: get_timeline
+  description: Get key EU AI Act implementation dates and deadlines.
+  parameters:
+  - name: caller
+    type: string
+    required: false
+- name: audit_report
+  description: Generate a complete EU AI Act audit report.
+  parameters:
+  - name: system_name
+    type: string
+    required: true
+  - name: provider_name
+    type: string
+    required: true
+  - name: provider_contact
+    type: string
+    required: true
+  - name: version
+    type: string
+    required: true
+  - name: purpose
+    type: string
+    required: true
+  - name: description
+    type: string
+    required: true
+  - name: data_types
+    type: string
+    required: true
+  - name: decision_scope
+    type: string
+    required: true
+  - name: architecture_description
+    type: string
+    required: true
+  - name: has_risk_management
+    type: boolean
+    required: false
+  - name: has_data_governance
+    type: boolean
+    required: false
+  - name: has_technical_docs
+    type: boolean
+    required: false
+  - name: has_logging
+    type: boolean
+    required: false
+  - name: has_transparency_info
+    type: boolean
+    required: false
+  - name: has_human_oversight
+    type: boolean
+    required: false
+  - name: has_accuracy_testing
+    type: boolean
+    required: false
+  - name: annual_global_turnover_eur
+    type: number
+    required: false
+  - name: is_sme
+    type: boolean
+    required: false
+  - name: caller
+    type: string
+    required: false
+  - name: tier
+    type: string
+    required: false
+- name: multi_jurisdiction_map
+  description: Map EU AI Act articles to equivalent requirements in UK, Singapore,
+    Canada, and US NIST.
+  parameters:
+  - name: article
+    type: string
+    required: true
+  - name: jurisdictions
+    type: array
+    required: false

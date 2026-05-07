@@ -1,0 +1,65 @@
+{
+  "name": "EU AI Act Compliance",
+  "description": "By MEOK AI Labs \u2014 The only MCP server that automates EU AI Act compliance checking. Risk classification, 42-point audit, documentation, penalties, deadlines.",
+  "version": "1.0.0",
+  "protocol_version": "2025-11-25",
+  "publisher": {
+    "name": "MEOK AI Labs",
+    "url": "https://meok.ai",
+    "email": "nicholas@meok.ai"
+  },
+  "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+  "license": "MIT",
+  "transport": [
+    "stdio",
+    "streamable-http"
+  ],
+  "authentication": {
+    "type": "api-key",
+    "free_tier": true,
+    "free_limit": "15 calls/day"
+  },
+  "tools": [
+    {
+      "name": "classify_ai_risk",
+      "description": "Classify an AI system's risk level under the EU AI Act."
+    },
+    {
+      "name": "check_compliance",
+      "description": "Run an EU AI Act compliance check against Articles 9-15 requirements."
+    },
+    {
+      "name": "generate_documentation",
+      "description": "Generate Article 11 / Annex IV compliant technical documentation template."
+    },
+    {
+      "name": "assess_penalties",
+      "description": "Calculate potential EU AI Act penalties for a given violation type."
+    },
+    {
+      "name": "get_timeline",
+      "description": "Get key EU AI Act implementation dates and deadlines."
+    },
+    {
+      "name": "audit_report",
+      "description": "Generate a complete EU AI Act audit report."
+    },
+    {
+      "name": "multi_jurisdiction_map",
+      "description": "Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST."
+    }
+  ],
+  "categories": [
+    "AI & Machine Learning",
+    "Security & Compliance"
+  ],
+  "pricing": {
+    "free": {
+      "calls_per_day": 15
+    },
+    "pro": {
+      "price": "$29/month",
+      "url": "https://meok.ai/pricing"
+    }
+  }
+}

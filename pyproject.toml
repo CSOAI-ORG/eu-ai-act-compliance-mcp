@@ -4,51 +4,27 @@ build-backend = "hatchling.build"
 
 [project]
 name = "eu-ai-act-compliance-mcp"
-version = "1.0.0"
-description = "EU AI Act Compliance MCP Server — automates risk classification, compliance auditing, documentation generation, and penalty assessment per Regulation (EU) 2024/1689"
-readme = "README.md"
-license = "MIT"
+version = "1.1.0"
+description = "EU AI Act compliance for AI agents. Instant risk scan, deadline tracker, 42-point audit, documentation generator, penalty calculator. Zero-config free tier. Built by MEOK AI Labs."
+license = {file = "LICENSE"}
 requires-python = ">=3.10"
-authors = [
-    { name = "MEOK AI Labs", email = "hello@meok.ai" },
-]
-keywords = [
-    "eu-ai-act",
-    "ai-compliance",
-    "mcp",
-    "model-context-protocol",
-    "regulation",
-    "risk-classification",
-    "audit",
-    "gdpr",
-    "meok",
-]
+authors = [{name = "MEOK AI Labs", email = "nicholas@meok.ai"}]
+keywords = ["mcp", "ai-governance", "compliance", "meok"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Legal Industry",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Office/Business :: Financial",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
 ]
-dependencies = [
-    "mcp>=1.0.0",
-    "httpx>=0.25.0",
-]
+dependencies = ["mcp>=1.0.0"]
 
 [project.urls]
 Homepage = "https://meok.ai"
-Repository = "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp"
-Documentation = "https://meok.ai/mcp/eu-ai-act"
-"Bug Tracker" = "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues"
-
-[project.scripts]
-eu-ai-act-mcp = "server:mcp.run"
+Repository = "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp"
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
+only-include = ["server.py"]
+
+[project.scripts]
+eu-ai-act-compliance-mcp = "server:main"
