@@ -125,3 +125,4 @@ Or install the zero-dep verifier: `pip install meok-attestation-verify`
 ## License
 
 MIT © [CSOAI](https://csoai.org)
+<!-- mcp-name: io.github.CSOAI-ORG/eu-ai-act-compliance-mcp -->
