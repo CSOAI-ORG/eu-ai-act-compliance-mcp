@@ -1,8 +1,9 @@
 <div align="center">
 
+[![MCPize](https://mcpize.com/badge/@CSOAI-ORG/eu-ai-act-compliance)](https://mcpize.com/mcp/eu-ai-act-compliance)
 [![GitHub stars](https://img.shields.io/github/stars/CSOAI-ORG/eu-ai-act-compliance-mcp)](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)
 
-# 🤖 EU AI Act Compliance MCP Server
+# EU AI Act Compliance MCP Server
 
 **The only MCP server that automates EU AI Act compliance checking.**
 
@@ -16,6 +17,18 @@ Classify AI risk levels · Run 42-point compliance audits · Generate Article 11
 [Installation](#quick-start) · [Tools](#tools) · [Docs](https://csoai.org) · [Report Bug](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
 
 </div>
+
+---
+
+## Connect via MCPize
+
+Use this MCP server instantly with no local installation:
+
+```bash
+npx -y mcpize connect @CSOAI-ORG/eu-ai-act-compliance --client claude
+```
+
+Or connect at: **https://mcpize.com/mcp/eu-ai-act-compliance**
 
 ---
 
@@ -70,10 +83,10 @@ Then prompted Claude:
 
 ## Support & Enterprise
 
-- 💬 [GitHub Discussions](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/discussions)
-- 🐛 [Report Issues](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
-- 📧 Enterprise support: nicholas@csoai.org
-- 🌐 [CSOAI.org](https://csoai.org) — Compliance automation platform
+- [GitHub Discussions](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/discussions)
+- [Report Issues](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
+- Enterprise support: nicholas@csoai.org
+- [CSOAI.org](https://csoai.org) — Compliance automation platform
 
 ## License
 

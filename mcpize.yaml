@@ -1,0 +1,22 @@
+# MCPize Configuration
+# Docs: https://mcpize.com/docs/mcpize-yaml
+
+version: 1
+
+name: "EU AI Act Compliance"
+slug: "eu-ai-act-compliance"
+
+runtime: python
+entry: "[object Object]"
+
+build:
+  install: "pip install ."
+
+start:
+  type: stdio
+  command: "python"
+  args:
+    - "server.py"
+
+bridge:
+  mode: stdio
