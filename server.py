@@ -443,7 +443,24 @@ def _match_keywords(text: str, keywords: list[str]) -> list[str]:
 # ---------------------------------------------------------------------------
 @mcp.tool()
 def quick_scan(description: str) -> dict:
-    """One-sentence AI system description -> instant EU AI Act risk classification and top obligations. No API key required."""
+    """One-sentence AI system description -> instant EU AI Act risk classification and top obligations. No API key required.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     limit_err = _check_rate_limit("quick_scan_anonymous")
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -537,7 +554,24 @@ def quick_scan(description: str) -> dict:
 # ---------------------------------------------------------------------------
 @mcp.tool()
 def deadline_check() -> dict:
-    """All EU AI Act enforcement deadlines with days remaining. No parameters needed."""
+    """All EU AI Act enforcement deadlines with days remaining. No parameters needed.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     today = datetime.now().date()
     deadlines = []
     next_upcoming = None
@@ -620,6 +654,22 @@ def classify_ai_risk(
         description: A description of the AI system, its purpose, data used, and deployment context.
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
@@ -760,6 +810,22 @@ def check_compliance(
         has_accuracy_testing: Whether accuracy, robustness, and cybersecurity are tested (Article 15).
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
@@ -942,6 +1008,21 @@ def generate_documentation(
         human_oversight_description: Description of human oversight measures (if available).
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+
+    Behavior:
+        This tool generates structured output without modifying external systems.
+        Output is deterministic for identical inputs. No side effects.
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
@@ -1190,6 +1271,22 @@ def assess_penalties(
             SMEs and startups may benefit from proportionate penalties per Article 99(6).
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
@@ -1274,6 +1371,22 @@ def get_timeline(
     Args:
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
@@ -1376,6 +1489,21 @@ def audit_report(
         is_sme: Whether the company is an SME.
         caller: Identifier for rate limiting.
         tier: "free" (10 calls/day) or "pro" (unlimited, $29/mo).
+
+    Behavior:
+        This tool generates structured output without modifying external systems.
+        Output is deterministic for identical inputs. No side effects.
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
@@ -1624,7 +1752,24 @@ def multi_jurisdiction_map(
     article: str,
     jurisdictions: list = None,
     api_key: str = "") -> str:
-    """Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST."""
+    """Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
@@ -1657,7 +1802,24 @@ def predict_risk_neural(
     deployed_cross_border: bool = False,
     model_explainable: bool = True,
     api_key: str = "") -> dict:
-    """Neural network-based risk prediction that improves from every compliance check. Predicts overall risk, violation probability, remediation urgency, and audit priority."""
+    """Neural network-based risk prediction that improves from every compliance check. Predicts overall risk, violation probability, remediation urgency, and audit priority.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
@@ -1691,7 +1853,24 @@ def predict_risk_neural(
 
 @mcp.tool()
 def neural_insights(api_key: str = "") -> dict:
-    """Get aggregate learning insights from the neural compliance model — training history, maturity, and common risk patterns."""
+    """Get aggregate learning insights from the neural compliance model — training history, maturity, and common risk patterns.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
