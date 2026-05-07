@@ -5,12 +5,13 @@ version: 1
 
 name: "EU AI Act Compliance"
 slug: "eu-ai-act-compliance"
+description: "EU AI Act (Regulation 2024/1689) compliance MCP — risk classification, 42-point audit, Article 11 documentation, penalty calculator, post-Digital Omnibus timelines. By MEOK AI Labs."
 
 runtime: python
-entry: "[object Object]"
+entry: "server.py"
 
 build:
-  install: "pip install ."
+  install: "pip install -e ."
 
 start:
   type: stdio
