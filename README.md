@@ -117,6 +117,19 @@ Or install the zero-dep verifier: `pip install meok-attestation-verify`
 
 [![Star History Chart](https://api.star-history.com/svg?repos=CSOAI-ORG/eu-ai-act-compliance-mcp&type=Date)](https://star-history.com/#CSOAI-ORG/eu-ai-act-compliance-mcp&Date)
 
+## Need Full EU AI Act Compliance?
+
+This MCP gives you the tools — **[councilof.ai](https://councilof.ai)** gives you the full platform.
+
+| Tier | Price | What You Get |
+|------|-------|-------------|
+| **Starter** | £29/mo | Automated risk classification + deadline tracking |
+| **Pro** | £79/mo | Full audit packs + HMAC-signed attestations |
+| **Enterprise** | £1,499/mo | Dedicated compliance support + Notified Body prep |
+| **Gap Analysis** | £5,000 | 48-hour expert assessment with signed report |
+
+→ **[Get started at councilof.ai](https://councilof.ai)** — 100x cheaper than traditional compliance consulting.
+
 ## Support & Enterprise
 
 - [GitHub Discussions](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/discussions)
@@ -125,8 +138,9 @@ Or install the zero-dep verifier: `pip install meok-attestation-verify`
 - Website: [meok.ai](https://meok.ai)
 - All MCP servers: [meok.ai/labs/mcp/servers](https://meok.ai/labs/mcp/servers)
 - Attestation API: [meok-attestation-api.vercel.app](https://meok-attestation-api.vercel.app)
+- Compliance platform: [councilof.ai](https://councilof.ai)
 
 ## License
 
-MIT © [CSOAI](https://csoai.org)
+MIT © [MEOK AI Labs](https://meok.ai)
 <!-- mcp-name: io.github.CSOAI-ORG/eu-ai-act-compliance-mcp -->
