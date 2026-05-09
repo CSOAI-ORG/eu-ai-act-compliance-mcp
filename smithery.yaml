@@ -1,10 +1,20 @@
 name: eu-ai-act-compliance-mcp
-description: 'Eu Ai Act Compliance tools for AI agents. Capabilities: classify ai
-  risk, check compliance, generate documentation. Built by MEOK AI Labs.'
-version: 1.0.0
+description: 'EU AI Act compliance for AI agents. Instant risk classification, 42-point
+  audit, Annex IV documentation generator, penalty calculator, multi-jurisdiction mapping.
+  Free tier available. Built by MEOK AI Labs.'
+version: 1.3.0
 tools:
+- name: quick_scan
+  description: One-sentence AI system description -> instant risk classification. No API key required.
+  parameters:
+  - name: description
+    type: string
+    required: true
+- name: deadline_check
+  description: All EU AI Act enforcement deadlines with days remaining. No parameters needed.
+  parameters: []
 - name: classify_ai_risk
-  description: Classify an AI system's risk level under the EU AI Act.
+  description: Classify an AI system's risk level under the EU AI Act (prohibited, high-risk, limited, minimal).
   parameters:
   - name: description
     type: string
@@ -12,8 +22,11 @@ tools:
   - name: caller
     type: string
     required: false
+  - name: api_key
+    type: string
+    required: false
 - name: check_compliance
-  description: Run an EU AI Act compliance check against Articles 9-15 requirements.
+  description: Run a 42-point EU AI Act compliance check against Articles 9-15 requirements.
   parameters:
   - name: system_name
     type: string
@@ -48,22 +61,16 @@ tools:
   - name: has_accuracy_testing
     type: boolean
     required: false
-  - name: caller
+  - name: api_key
     type: string
     required: false
 - name: generate_documentation
-  description: Generate Article 11 / Annex IV compliant technical documentation template.
+  description: Generate Article 11 / Annex IV compliant technical documentation template. Requires Pro tier.
   parameters:
   - name: system_name
     type: string
     required: true
   - name: provider_name
-    type: string
-    required: true
-  - name: provider_contact
-    type: string
-    required: true
-  - name: version
     type: string
     required: true
   - name: intended_purpose
@@ -72,24 +79,24 @@ tools:
   - name: description
     type: string
     required: true
-  - name: data_description
+  - name: api_key
     type: string
     required: true
-  - name: architecture_description
+- name: audit_report
+  description: Generate a complete EU AI Act audit report with risk classification, compliance check, penalty assessment. Requires Pro tier.
+  parameters:
+  - name: system_name
     type: string
     required: true
-  - name: performance_metrics
+  - name: purpose
     type: string
-    required: false
-  - name: risk_management_description
+    required: true
+  - name: data_types
     type: string
-    required: false
-  - name: human_oversight_description
+    required: true
+  - name: api_key
     type: string
-    required: false
-  - name: caller
-    type: string
-    required: false
+    required: true
 - name: assess_penalties
   description: Calculate potential EU AI Act penalties for a given violation type.
   parameters:
@@ -99,88 +106,24 @@ tools:
   - name: annual_global_turnover_eur
     type: number
     required: false
-  - name: is_sme
-    type: boolean
-    required: false
-  - name: caller
-    type: string
-    required: false
-- name: get_timeline
-  description: Get key EU AI Act implementation dates and deadlines.
-  parameters:
-  - name: caller
-    type: string
-    required: false
-- name: audit_report
-  description: Generate a complete EU AI Act audit report.
-  parameters:
-  - name: system_name
-    type: string
-    required: true
-  - name: provider_name
-    type: string
-    required: true
-  - name: provider_contact
-    type: string
-    required: true
-  - name: version
-    type: string
-    required: true
-  - name: purpose
-    type: string
-    required: true
-  - name: description
-    type: string
-    required: true
-  - name: data_types
-    type: string
-    required: true
-  - name: decision_scope
-    type: string
-    required: true
-  - name: architecture_description
-    type: string
-    required: true
-  - name: has_risk_management
-    type: boolean
-    required: false
-  - name: has_data_governance
-    type: boolean
-    required: false
-  - name: has_technical_docs
-    type: boolean
-    required: false
-  - name: has_logging
-    type: boolean
-    required: false
-  - name: has_transparency_info
-    type: boolean
-    required: false
-  - name: has_human_oversight
-    type: boolean
-    required: false
-  - name: has_accuracy_testing
-    type: boolean
-    required: false
-  - name: annual_global_turnover_eur
-    type: number
-    required: false
-  - name: is_sme
-    type: boolean
-    required: false
-  - name: caller
-    type: string
-    required: false
-  - name: tier
+  - name: api_key
     type: string
     required: false
 - name: multi_jurisdiction_map
-  description: Map EU AI Act articles to equivalent requirements in UK, Singapore,
-    Canada, and US NIST.
+  description: Map EU AI Act articles to UK, Singapore, Canada, and US NIST equivalents. Requires Pro tier.
   parameters:
   - name: article
     type: string
     required: true
-  - name: jurisdictions
-    type: array
-    required: false
+  - name: api_key
+    type: string
+    required: true
+- name: predict_risk_neural
+  description: Neural network-based risk prediction. Requires Pro tier.
+  parameters:
+  - name: system_name
+    type: string
+    required: true
+  - name: api_key
+    type: string
+    required: true
