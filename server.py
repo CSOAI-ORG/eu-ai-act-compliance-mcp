@@ -747,7 +747,7 @@ def classify_ai_risk(
             result["remediation_plan"] = "LOCKED — Upgrade to Pro for article-by-article remediation plan"
             result["upgrade"] = {
                 "message": f"Your system matched {len(result['prohibited_matches'])} prohibited practices. Get the full breakdown + remediation steps with MEOK Pro.",
-                "url": "https://meok.ai/pricing",
+                "url": "https://meok.ai/api-keys",
                 "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
                 "price": "From GBP 29/month",
             }
@@ -793,7 +793,7 @@ def classify_ai_risk(
             result["compliance_roadmap"] = "LOCKED — Upgrade to Pro for a full compliance roadmap with Articles 9-15 checklist"
             result["upgrade"] = {
                 "message": f"Your system matches {len(result['high_risk_matches'])} high-risk areas. Get the full analysis + compliance roadmap with MEOK Pro.",
-                "url": "https://meok.ai/pricing",
+                "url": "https://meok.ai/api-keys",
                 "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
                 "price": "From GBP 29/month",
             }
@@ -1011,7 +1011,7 @@ def check_compliance(
         )
         result["upgrade"] = {
             "message": f"Your system scores {score:.1f}% with {failed} failing areas. Get the full 42-point checklist + remediation plan.",
-            "url": "https://meok.ai/pricing",
+            "url": "https://meok.ai/api-keys",
             "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
             "price": "From GBP 29/month",
         }
@@ -1138,7 +1138,7 @@ def generate_documentation(
                 "fields_requiring_completion": 22,
             },
             "upgrade": {
-                "url": "https://meok.ai/pricing",
+                "url": "https://meok.ai/api-keys",
                 "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
                 "price": "From GBP 29/month — includes unlimited documentation generation",
             },
@@ -1653,7 +1653,7 @@ def audit_report(
                 "estimated_value": "Equivalent to GBP 2,000-5,000 compliance consultancy report",
             },
             "upgrade": {
-                "url": "https://meok.ai/pricing",
+                "url": "https://meok.ai/api-keys",
                 "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
                 "price": "From GBP 29/month — includes unlimited audit reports",
             },
@@ -1949,7 +1949,7 @@ def multi_jurisdiction_map(
             ),
             "supported_jurisdictions": ["EU", "UK", "Singapore", "Canada", "US (NIST)"],
             "upgrade": {
-                "url": "https://meok.ai/pricing",
+                "url": "https://meok.ai/api-keys",
                 "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
                 "price": "From GBP 29/month",
             },

@@ -93,10 +93,16 @@ Then prompted Claude:
 
 | Tier | Price | What you get |
 |------|-------|-------------|
-| **Free** | £0 | 10 calls/day — risk classification + audit |
-| **Pro** | £199/mo | Unlimited calls + HMAC-signed attestations + public verify URLs |
-| **Enterprise** | £1,499/mo | Multi-tenant + co-branded PDF reports + Trust Center webhooks |
-| **One-off assessment** | £5,000 | 48h bespoke audit + signed deliverable |
+| **Free** | £0/forever | 10 calls/day — quick_scan, deadline_check, risk classification (summary) |
+| **Starter** | £29/mo | 100 calls/day — full detailed analysis + Annex IV docs + audit reports |
+| **Professional** | £79/mo | 1,000 calls/day — multi-jurisdiction mapping + neural predictions + attestations |
+| **Enterprise** | Custom | Unlimited — on-premise + custom models + SLA + SSO |
+
+**[Get your API key &rarr;](https://meok.ai/api-keys)**
+
+---
+
+> **If this tool helps your compliance workflow, please [star this repo](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)** — it helps other compliance teams find it and keeps it maintained.
 
 → [Subscribe to Pro](https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836) · [Enterprise](https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837) · [Book assessment](https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833)
 
