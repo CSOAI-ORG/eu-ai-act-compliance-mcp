@@ -395,8 +395,9 @@ EU_AI_ACT_TIMELINE = [
     {"date": "2024-08-01", "event": "EU AI Act entered into force (Regulation (EU) 2024/1689 published in Official Journal)", "article": "Article 113"},
     {"date": "2025-02-02", "event": "Prohibited AI practices (Article 5) become enforceable; AI literacy obligations (Article 4) apply", "article": "Articles 4, 5"},
     {"date": "2025-08-02", "event": "Rules for General-Purpose AI (GPAI) models apply (Chapter V); notified bodies designated; governance framework operational", "article": "Articles 51-56, Chapter VII"},
-    {"date": "2026-08-02", "event": "Full enforcement of all provisions for high-risk AI systems (including Annex III); obligations on providers, deployers, importers, distributors", "article": "Articles 6-49, Annex III"},
-    {"date": "2027-08-02", "event": "Obligations for high-risk AI systems that are safety components of products under Union harmonisation legislation (Annex I)", "article": "Annex I, Article 6(1)"},
+    {"date": "2026-11-02", "event": "Article 50 transparency obligations for AI-generated content (watermarking, deepfake labelling) become enforceable", "article": "Article 50"},
+    {"date": "2027-12-02", "event": "Full enforcement of all provisions for high-risk AI systems (Annex III) — delayed 16 months by EU Digital Omnibus Act (originally 2 Aug 2026)", "article": "Articles 6-49, Annex III"},
+    {"date": "2028-08-02", "event": "Obligations for high-risk AI systems that are safety components of products under Union harmonisation legislation (Annex I) — delayed 12 months by Digital Omnibus", "article": "Annex I, Article 6(1)"},
     {"date": "2030-08-02", "event": "Existing high-risk AI systems used by public authorities must comply (transitional provision)", "article": "Article 111(2)"},
 ]
 
@@ -525,7 +526,7 @@ def quick_scan(description: str) -> dict:
             "Ensure human oversight, transparency, and accuracy testing (Articles 13-15)",
         ]
         penalty_range = "Up to EUR 15,000,000 or 3% of global annual turnover"
-        deadline = "2 August 2026"
+        deadline = "2 December 2027 (delayed from Aug 2026 by EU Digital Omnibus Act)"
     else:
         # Check limited risk
         limited_keywords = [
@@ -737,6 +738,19 @@ def classify_ai_risk(
             f"or used in the EU. Penalties: up to EUR 35 million or 7% of global annual turnover "
             f"(Article 99(3)). Enforcement date: 2 February 2025."
         )
+        # Free tier: show classification but redact detailed matches
+        if tier == "free":
+            result["prohibited_matches"] = [
+                {"article": m["article"], "description": "[UPGRADE to see full match details and remediation steps]"}
+                for m in result["prohibited_matches"]
+            ]
+            result["remediation_plan"] = "LOCKED — Upgrade to Pro for article-by-article remediation plan"
+            result["upgrade"] = {
+                "message": f"Your system matched {len(result['prohibited_matches'])} prohibited practices. Get the full breakdown + remediation steps with MEOK Pro.",
+                "url": "https://meok.ai/pricing",
+                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "price": "From GBP 29/month",
+            }
         return result
 
     # Check high-risk (Annex III)
@@ -761,8 +775,28 @@ def classify_ai_risk(
             f"High-risk systems must comply with Articles 9-15 (risk management, data governance, "
             f"technical documentation, logging, transparency, human oversight, accuracy/robustness/cybersecurity). "
             f"A conformity assessment is required before placing on the market. "
-            f"Full enforcement: 2 August 2026."
+            f"Full enforcement: 2 December 2027 (delayed by EU Digital Omnibus Act)."
         )
+        # Free tier: show classification + area names, but redact subcategories and keywords
+        if tier == "free":
+            result["high_risk_matches"] = [
+                {
+                    "area": m["area"],
+                    "title": m["title"],
+                    "article_ref": m["article_ref"],
+                    "description": "[UPGRADE to see detailed analysis]",
+                    "subcategories": ["[LOCKED — upgrade for specific subcategory matches]"],
+                    "matched_keywords": [f"{len(m['matched_keywords'])} keywords matched — upgrade to see details"],
+                }
+                for m in result["high_risk_matches"]
+            ]
+            result["compliance_roadmap"] = "LOCKED — Upgrade to Pro for a full compliance roadmap with Articles 9-15 checklist"
+            result["upgrade"] = {
+                "message": f"Your system matches {len(result['high_risk_matches'])} high-risk areas. Get the full analysis + compliance roadmap with MEOK Pro.",
+                "url": "https://meok.ai/pricing",
+                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "price": "From GBP 29/month",
+            }
         return result
 
     # Check limited risk (transparency obligations — Article 50)
@@ -952,7 +986,6 @@ def check_compliance(
         ) if special_categories else (
             "System processes personal data — ensure GDPR compliance (Article 10(5) of the AI Act)."
         ) if gdpr_relevant else "No personal data identified in declared data types.",
-        "checklist": checklist,
         "recommendation": (
             "CRITICAL: System may involve prohibited practices. Cease development/deployment immediately "
             "and seek legal review."
@@ -960,11 +993,31 @@ def check_compliance(
             f"System scores {score:.1f}% compliance. "
             + (f"URGENT: {failed} requirement areas need attention before the system can be placed on the market. "
                if failed > 0 else "All declared requirements are met. Proceed to conformity assessment. ")
-            + "Full enforcement deadline: 2 August 2026."
+            + "Full enforcement deadline: 2 December 2027 (delayed by Digital Omnibus)."
         ),
         "regulation": "Regulation (EU) 2024/1689",
         "meok_labs": "https://meok.ai",
     }
+
+    # FREE TIER: show score + failed article names, but NOT the detailed checklist
+    if tier == "free":
+        failed_articles = [item["article"] + " — " + item["title"] for item in checklist if item["overall_status"] == "FAIL"]
+        passed_articles = [item["article"] + " — " + item["title"] for item in checklist if item["overall_status"] == "PASS"]
+        result["failed_requirements"] = failed_articles
+        result["passed_requirements"] = passed_articles
+        result["detailed_checklist"] = (
+            f"LOCKED — {total_checks} individual checks available with MEOK Pro. "
+            f"Includes specific remediation steps for each of your {failed} failing requirements."
+        )
+        result["upgrade"] = {
+            "message": f"Your system scores {score:.1f}% with {failed} failing areas. Get the full 42-point checklist + remediation plan.",
+            "url": "https://meok.ai/pricing",
+            "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+            "price": "From GBP 29/month",
+        }
+    else:
+        # PRO/ENTERPRISE: full detailed checklist
+        result["checklist"] = checklist
 
     # Neural learning: train from this compliance check (if neural engine available)
     if _neural_net is not None:
@@ -1058,6 +1111,39 @@ def generate_documentation(
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
+
+    # GATE: Documentation generation is a Pro feature
+    if tier == "free":
+        return {
+            "error": "pro_feature",
+            "message": (
+                "Annex IV documentation generation requires MEOK Pro. "
+                "This tool produces a complete, regulation-ready technical documentation template "
+                "covering all 8 sections of Annex IV (EU AI Act). "
+                "Save 40+ hours of manual documentation work."
+            ),
+            "preview": {
+                "sections_generated": [
+                    "1. General Description of the AI System",
+                    "2. Detailed Description of Elements and Development Process",
+                    "3. Monitoring, Functioning, and Control",
+                    "4. Appropriateness of Performance Metrics",
+                    "5. Risk Management System (Article 9)",
+                    "6. Changes Throughout the Lifecycle",
+                    "7. EU Declaration of Conformity (Article 47)",
+                    "8. Post-Market Monitoring System (Article 72)",
+                ],
+                "output_format": "Markdown — ready for legal review",
+                "fields_auto_populated": 12,
+                "fields_requiring_completion": 22,
+            },
+            "upgrade": {
+                "url": "https://meok.ai/pricing",
+                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "price": "From GBP 29/month — includes unlimited documentation generation",
+            },
+            "free_alternative": "Use quick_scan or deadline_check (free, no API key needed) to assess your system first.",
+        }
 
     date_str = datetime.now().strftime("%Y-%m-%d")
 
@@ -1540,6 +1626,40 @@ def audit_report(
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
 
+    # GATE: Full audit report is a Pro feature
+    if tier == "free":
+        # Give them a teaser — run quick classification to show value
+        quick_result = quick_scan(f"{purpose} {description} {data_types} {decision_scope}")
+        risk_level = quick_result.get("risk_level", "unknown") if isinstance(quick_result, dict) else "unknown"
+        return {
+            "error": "pro_feature",
+            "message": (
+                "Full EU AI Act audit reports require MEOK Pro. "
+                "This tool generates a comprehensive compliance audit covering: "
+                "risk classification, 42-point compliance checklist, Annex IV documentation status, "
+                "penalty exposure calculation, implementation timeline, and prioritised remediation plan."
+            ),
+            "teaser": {
+                "system_name": system_name,
+                "quick_risk_classification": risk_level,
+                "report_sections": [
+                    "1. Risk Classification (Article 6, Annex III)",
+                    "2. Compliance Checklist (Articles 9-15) — 42 individual checks",
+                    "3. Penalty Exposure (Article 99) — calculated for your turnover",
+                    "4. Implementation Timeline — all deadlines with days remaining",
+                    "5. Prioritised Recommendations — ranked by urgency",
+                    "6. Technical Documentation Status (Annex IV)",
+                ],
+                "estimated_value": "Equivalent to GBP 2,000-5,000 compliance consultancy report",
+            },
+            "upgrade": {
+                "url": "https://meok.ai/pricing",
+                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "price": "From GBP 29/month — includes unlimited audit reports",
+            },
+            "free_alternative": "Use quick_scan (free) for instant risk classification, or deadline_check for enforcement dates.",
+        }
+
     # Run sub-analyses (bypass rate limiting for internal calls)
     classification_raw = json.loads(classify_ai_risk(f"{purpose} {description} {data_types} {decision_scope}", caller, "pro"))
     compliance_raw = json.loads(check_compliance(
@@ -1818,6 +1938,23 @@ def multi_jurisdiction_map(
     limit_err = _check_rate_limit("anonymous", tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
+
+    # GATE: Multi-jurisdiction mapping is a Pro feature
+    if tier == "free":
+        return {
+            "error": "pro_feature",
+            "message": (
+                "Multi-jurisdiction mapping requires MEOK Pro. "
+                "Maps EU AI Act requirements to UK AI Act, Singapore IMDA, Canada AIDA, and US NIST AI RMF."
+            ),
+            "supported_jurisdictions": ["EU", "UK", "Singapore", "Canada", "US (NIST)"],
+            "upgrade": {
+                "url": "https://meok.ai/pricing",
+                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "price": "From GBP 29/month",
+            },
+        }
+
     jurisdictions = jurisdictions or ["uk", "singapore", "canada", "us_nist"]
     MAPPINGS = {
         "Article 5": {"uk": "UK AI Act prohibited practices", "singapore": "MAS FEAT principles — fairness", "canada": "AIDA prohibited uses", "us_nist": "NIST AI RMF Govern 1.1"},

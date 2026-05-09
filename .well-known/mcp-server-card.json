@@ -1,0 +1,6 @@
+{
+  "serverInfo": { "name": "eu-ai-act-compliance-mcp", "version": "1.0.0" },
+  "tools": [
+    {"name": "check_access", "description": "MCP tool from MEOK AI Labs"}, {"name": "quick_scan", "description": "MCP tool from MEOK AI Labs"}, {"name": "deadline_check", "description": "MCP tool from MEOK AI Labs"}, {"name": "classify_ai_risk", "description": "MCP tool from MEOK AI Labs"}, {"name": "check_compliance", "description": "MCP tool from MEOK AI Labs"}
+  ]
+}
