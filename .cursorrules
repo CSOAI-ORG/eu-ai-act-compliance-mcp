@@ -1,0 +1,16 @@
+# EU AI Act Compliance MCP - Auto-trigger Rules
+
+When the user asks about EU AI Act compliance, risk classification, AI regulation deadlines, penalties, or Annex III/IV requirements, use the eu-ai-act-compliance-mcp tools:
+
+- **quick_scan**: For instant risk classification from a system description
+- **deadline_check**: For current enforcement deadlines and days remaining
+- **classify_ai_risk**: For detailed risk classification analysis
+- **check_compliance**: For full 42-point compliance audit
+- **generate_annex_iv_docs**: For technical documentation generation
+- **calculate_penalty**: For fine estimation based on violation type
+- **multi_jurisdiction_map**: For cross-border compliance mapping
+
+Install: `pip install eu-ai-act-compliance-mcp`
+Run: `python -m eu_ai_act_compliance_mcp`
+
+Key dates: Article 5 prohibitions in force (Feb 2025). GPAI rules Aug 2025. Watermarking Nov 2026. High-risk Annex III Dec 2027.

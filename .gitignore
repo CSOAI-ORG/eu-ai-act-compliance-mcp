@@ -4,3 +4,6 @@ __pycache__/
 .venv/
 dist/
 *.egg-info/
+data/regulations.db
+*.mcpb
+server_v2.py

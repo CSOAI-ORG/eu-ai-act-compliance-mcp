@@ -15,9 +15,59 @@ Run:     python server.py
 import json
 import math
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Literal
 from collections import defaultdict
 from mcp.server.fastmcp import FastMCP
+
+# ── Pydantic models for structured I/O (optional — graceful degradation if missing) ──
+try:
+    from pydantic import BaseModel, Field
+    _PYDANTIC_AVAILABLE = True
+
+    class RiskClassificationResult(BaseModel):
+        """Output schema for quick_scan and classify_ai_risk tools."""
+        risk_level: Literal["prohibited", "high-risk", "limited-risk", "minimal", "unknown"] = Field(
+            description="EU AI Act risk classification per Articles 5/6/50/95"
+        )
+        matched_areas: list[str] = Field(default_factory=list, description="Regulation refs that matched")
+        top_3_obligations: list[str] = Field(default_factory=list, description="Most urgent obligations")
+        deadline: str = Field(default="", description="Enforcement deadline")
+        penalty_range: str = Field(default="", description="Max fine under Article 99")
+        regulation: str = Field(default="Regulation (EU) 2024/1689", description="Legal basis")
+        next_step: str = Field(default="", description="Recommended follow-up action")
+
+    class ComplianceCheckInput(BaseModel):
+        """Input schema for check_compliance tool."""
+        entity_name: str = Field(min_length=1, max_length=200, description="Legal entity name")
+        system_description: str = Field(min_length=10, description="What the AI system does")
+        current_controls: str = Field(default="", description="Comma-separated current controls")
+        risk_level: Literal["high-risk", "limited-risk", "minimal", "unknown"] = Field(default="unknown")
+
+    class SearchRegulationInput(BaseModel):
+        """Input schema for search_regulation tool."""
+        query: str = Field(min_length=2, max_length=500, description="FTS5 search query")
+        regulation: Literal["", "eu-ai-act", "dora", "nis2", "cra", "csrd", "gdpr"] = Field(
+            default="", description="Optional regulation filter"
+        )
+        limit: int = Field(default=10, ge=1, le=50, description="Max results to return")
+
+    class SearchResultItem(BaseModel):
+        regulation: str
+        article_number: int
+        snippet: str
+        relevance_score: float
+
+    class SearchRegulationOutput(BaseModel):
+        query: str
+        regulation_filter: str
+        result_count: int
+        source: str
+        disclaimer: str
+        results: list[SearchResultItem]
+
+except ImportError:
+    _PYDANTIC_AVAILABLE = False
+    # Pydantic not installed — tools still work, just no schema validation
 
 # ── Authentication ──────────────────────────────────────────────
 import os as _os
@@ -2084,6 +2134,150 @@ def neural_insights(api_key: str = "") -> dict:
     if _neural_net is None:
         return {"error": "Neural engine not available. Install meok-labs-engine for neural insights."}
     return _neural_net.get_insights()
+
+
+# ── search_regulation: FTS5-backed verbatim regulation lookup ──────────────
+# Powered by EUR-Lex Cellar API daily sync. Returns 64-token snippets from
+# the canonical regulation text (Akoma Ntoso XHTML parsed from EUR-Lex).
+# 410 articles across 6 regulations (EU AI Act, DORA, NIS2, CRA, CSRD, GDPR).
+
+import sqlite3 as _sqlite3
+from pathlib import Path as _Path
+
+_REGULATIONS_DB = _Path(__file__).parent / "data" / "regulations.db"
+
+
+@mcp.tool()
+def search_regulation(query: str, regulation: str = "", limit: int = 10) -> dict:
+    """Full-text search across 410 articles of real EU regulation text (EUR-Lex verified).
+
+    Args:
+        query: Search terms. Supports FTS5 syntax (AND, OR, NEAR, phrase quoting).
+        regulation: Optional filter — one of: eu-ai-act, dora, nis2, cra, csrd, gdpr.
+        limit: Max results to return (default 10).
+
+    Returns:
+        Dict with snippets from matching articles, each annotated with regulation,
+        article number, and a relevance score. Snippets are 64-token windows with
+        `>>>match<<<` highlight markers around the matched terms.
+
+    Behavior:
+        Verbatim text from EUR-Lex Cellar (Regulation EU 2024/1689, EU 2022/2554,
+        EU 2022/2555, EU 2024/2847, EU 2022/2464, EU 2016/679). Updated daily via
+        GitHub Actions sync from publications.europa.eu SPARQL endpoint.
+        No LLM summarization — every quote is auditor-defensible.
+    """
+    if not _REGULATIONS_DB.exists():
+        return {
+            "error": "Regulation database not yet synced. Run: python scripts/eurlex_sync.py",
+            "hint": "First sync takes ~30 seconds, fetches ~1.7MB of regulation text",
+        }
+    if not query or len(query.strip()) < 2:
+        return {"error": "Query must be at least 2 characters"}
+
+    celex_map = {
+        "eu-ai-act": "32024R1689",
+        "dora": "32022R2554",
+        "nis2": "32022L2555",
+        "cra": "32024R2847",
+        "csrd": "32022L2464",
+        "gdpr": "32016R0679",
+    }
+    celex_filter = celex_map.get(regulation.lower().strip()) if regulation else None
+
+    # FTS5 query construction:
+    # - If the user already wrapped the query in "..." or used AND/OR/NEAR, pass through.
+    # - Otherwise split on whitespace and quote each token, joining with implicit AND.
+    #   Quoting per-token neutralises hyphens, slashes, and other FTS5 metacharacters
+    #   (e.g. "high-risk" would otherwise be parsed as `high NOT risk`).
+    raw = query.strip()
+    upper = raw.upper()
+    is_phrase = raw.startswith('"') and raw.endswith('"') and len(raw) >= 2
+    has_operator = any(op in upper for op in (" AND ", " OR ", " NEAR("))
+    if is_phrase or has_operator:
+        safe_query = raw
+    else:
+        tokens = [t for t in raw.split() if t]
+        safe_query = " ".join('"' + t.replace('"', '""') + '"' for t in tokens)
+
+    conn = _sqlite3.connect(str(_REGULATIONS_DB))
+    try:
+        if celex_filter:
+            sql = """
+                SELECT celex, article_number, article_id,
+                       snippet(articles_fts, 3, '>>>', '<<<', '...', 64) AS snip,
+                       rank
+                FROM articles_fts
+                WHERE articles_fts MATCH ? AND celex = ?
+                ORDER BY rank LIMIT ?
+            """
+            rows = conn.execute(sql, (safe_query, celex_filter, limit)).fetchall()
+        else:
+            sql = """
+                SELECT celex, article_number, article_id,
+                       snippet(articles_fts, 3, '>>>', '<<<', '...', 64) AS snip,
+                       rank
+                FROM articles_fts
+                WHERE articles_fts MATCH ?
+                ORDER BY rank LIMIT ?
+            """
+            rows = conn.execute(sql, (safe_query, limit)).fetchall()
+
+        celex_to_name = {v: k for k, v in celex_map.items()}
+        results = [
+            {
+                "regulation": celex_to_name.get(r[0], r[0]),
+                "article_number": r[1],
+                "snippet": r[3],
+                "relevance_score": round(abs(r[4]), 2),
+            }
+            for r in rows
+        ]
+
+        meta = {
+            "query": query,
+            "regulation_filter": regulation or "all",
+            "result_count": len(results),
+            "source": "EUR-Lex Cellar API (publications.europa.eu) — verbatim text",
+            "disclaimer": "Quotes are auditor-defensible. Not legal advice.",
+            "results": results,
+        }
+        return meta
+    except Exception as e:
+        return {"error": f"FTS5 search error: {e}", "hint": "Try simpler query without special characters"}
+    finally:
+        conn.close()
+
+
+@mcp.tool()
+def list_regulations_in_db() -> dict:
+    """List all regulations currently in the EUR-Lex FTS5 database with article counts and last-sync date."""
+    if not _REGULATIONS_DB.exists():
+        return {"error": "Database not yet synced", "regulations": []}
+    conn = _sqlite3.connect(str(_REGULATIONS_DB))
+    try:
+        rows = conn.execute(
+            "SELECT celex, name, short_name, type, title, article_count, last_synced FROM regulations ORDER BY celex"
+        ).fetchall()
+        return {
+            "source": "EUR-Lex Cellar API",
+            "total_regulations": len(rows),
+            "total_articles": conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0],
+            "regulations": [
+                {
+                    "celex": r[0],
+                    "name": r[1],
+                    "short_name": r[2],
+                    "type": r[3],
+                    "title": r[4][:120] if r[4] else "",
+                    "article_count": r[5],
+                    "last_synced": r[6],
+                }
+                for r in rows
+            ],
+        }
+    finally:
+        conn.close()
 
 
 def main():

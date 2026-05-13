@@ -1,0 +1,60 @@
+name: Daily EUR-Lex Sync
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # 6 AM UTC daily (matches Ansvar's pattern)
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check EUR-Lex for updates
+        id: check
+        run: |
+          python scripts/eurlex_sync.py --check 2>&1 | tee /tmp/check.log
+          if grep -q "Updates available" /tmp/check.log; then
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Sync regulations
+        if: steps.check.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          python scripts/eurlex_sync.py 2>&1 | tee /tmp/sync.log
+
+      - name: Commit updated database
+        if: steps.check.outputs.has_updates == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "MEOK EUR-Lex Sync"
+          git config user.email "hello@meok.ai"
+          git add data/regulations.db
+          git diff --cached --quiet || git commit -m "chore: daily EUR-Lex regulation sync $(date +%Y-%m-%d)"
+          git push
+
+      - name: Create issue on update
+        if: steps.check.outputs.has_updates == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const log = fs.readFileSync('/tmp/sync.log', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `EUR-Lex update detected - ${new Date().toISOString().split('T')[0]}`,
+              body: `## EUR-Lex Regulation Update\n\n\`\`\`\n${log.slice(0, 3000)}\n\`\`\`\n\nAutomatically detected by daily EUR-Lex sync workflow.`,
+              labels: ['eur-lex-update']
+            });

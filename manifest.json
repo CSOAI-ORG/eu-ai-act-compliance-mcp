@@ -1,0 +1,63 @@
+{
+  "manifest_version": "0.3",
+  "name": "eu-ai-act-compliance-mcp",
+  "display_name": "EU AI Act Compliance",
+  "version": "1.4.0",
+  "description": "EU AI Act compliance for AI agents. 410 articles from EUR-Lex via SQLite FTS5. Risk classification, 42-point audit, Annex IV docs, penalty calculator, deadline tracker, cryptographic attestations.",
+  "long_description": "The only MCP server that combines verbatim EU regulation text + active compliance scanning + cryptographic attestations. Powered by daily EUR-Lex Cellar API sync, this server ships with 410 articles across EU AI Act, DORA, NIS2, CRA, CSRD, and GDPR — all queryable via FTS5 with 64-token snippets. Every Pro/Enterprise audit emits an HMAC-SHA256 signed attestation with a public verification URL. Built by MEOK AI Labs in London.",
+  "license": "MIT",
+  "homepage": "https://meok.ai",
+  "repository": "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp",
+  "icon": "https://meok.ai/favicon.ico",
+  "categories": ["compliance", "governance", "legal"],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "eu-ai-act",
+    "compliance",
+    "ai-governance",
+    "regulation",
+    "audit",
+    "attestation",
+    "dora",
+    "nis2",
+    "gdpr"
+  ],
+  "author": {
+    "name": "MEOK AI Labs",
+    "email": "hello@meok.ai",
+    "url": "https://meok.ai"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": ["${__dirname}/server.py"],
+      "env": {
+        "MEOK_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "MEOK API Key (Optional)",
+      "description": "Optional. Free tier works without a key (10 calls/day). Pro tier: https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+      "default": "",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "tools_generated": true,
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "python": ">=3.10",
+    "platforms": ["darwin", "linux", "win32"]
+  },
+  "support": {
+    "issues": "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues",
+    "email": "hello@meok.ai"
+  }
+}

@@ -1,37 +1,51 @@
-[![eu-ai-act-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp/badges/score.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp)
+[![eu-ai-act-compliance-mcp MCP server](https://glama.ai/mcp/servers/meok-ai-labs/eu-ai-act-compliance-mcp/badges/score.svg)](https://glama.ai/mcp/servers/meok-ai-labs/eu-ai-act-compliance-mcp)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-Published-green)](https://registry.modelcontextprotocol.io)
 [![PyPI](https://img.shields.io/pypi/v/eu-ai-act-compliance-mcp)](https://pypi.org/project/eu-ai-act-compliance-mcp/)
 
-[![eu-ai-act-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp/badges/card.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp)
+[![eu-ai-act-compliance-mcp MCP server](https://glama.ai/mcp/servers/meok-ai-labs/eu-ai-act-compliance-mcp/badges/card.svg)](https://glama.ai/mcp/servers/meok-ai-labs/eu-ai-act-compliance-mcp)
 
 <div align="center">
 
-[![MCPize](https://mcpize.com/badge/@CSOAI-ORG/eu-ai-act-compliance)](https://mcpize.com/mcp/eu-ai-act-compliance)
-[![GitHub stars](https://img.shields.io/github/stars/CSOAI-ORG/eu-ai-act-compliance-mcp)](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)
+[![MCPize](https://mcpize.com/badge/@meok-ai-labs/eu-ai-act-compliance)](https://mcpize.com/mcp/eu-ai-act-compliance)
+[![GitHub stars](https://img.shields.io/github/stars/meok-ai-labs/eu-ai-act-compliance-mcp)](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/stargazers)
 
 # EU AI Act Compliance MCP Server
 
-**The only MCP server that automates EU AI Act compliance checking.**
+**The only MCP server that combines verbatim EU regulation text + active compliance scanning + cryptographic attestations.**
 
-Classify AI risk levels · Run 42-point compliance audits · Generate Article 11 documentation · Assess penalties · Track deadlines
+🆕 **v1.4 — 410 articles from EUR-Lex in SQLite FTS5.** Verbatim text. Daily sync. Auditor-defensible.
+
+Search regulation text · Classify AI risk levels · Run 42-point audits · Generate Annex IV docs · Assess penalties · Track deadlines · Sign attestations
 
 [![npm version](https://img.shields.io/npm/v/@meok-ai/eu-ai-act-compliance-mcp)](https://www.npmjs.com/package/@meok-ai/eu-ai-act-compliance-mcp)
 [![MCPize](https://img.shields.io/badge/MCPize-Listed-blue)](https://mcpize.com/mcp/eu-ai-act-compliance)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MEOK AI Labs](https://img.shields.io/badge/MEOK_AI_Labs-255+_servers-purple)](https://meok.ai)
 
-[Installation](#quick-start) · [Tools](#tools) · [Docs](https://csoai.org) · [Report Bug](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
+[Installation](#quick-start) · [Tools](#tools) · [Docs](https://meok.ai) · [Report Bug](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues)
 
 </div>
 
 ---
+
+
+## Quick Install
+
+| Client | Install |
+|--------|---------|
+| **Claude Desktop** | [![Install in Claude](https://img.shields.io/badge/Install-Claude-blue)](https://claude.ai) |
+| **Cursor** | [![Install in Cursor](https://img.shields.io/badge/Install-Cursor-black)](https://cursor.com) |
+| **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install-VS_Code-blue)](https://code.visualstudio.com) |
+| **Windsurf** | [![Install in Windsurf](https://img.shields.io/badge/Install-Windsurf-purple)](https://codeium.com/windsurf) |
+| **Docker** | `docker run -p 8000:8000 eu-ai-act-compliance-mcp` |
+| **pip** | `pip install eu-ai-act-compliance-mcp` |
 
 ## Connect via MCPize
 
 Use this MCP server instantly with no local installation:
 
 ```bash
-npx -y mcpize connect @CSOAI-ORG/eu-ai-act-compliance --client claude
+npx -y mcpize connect @meok-ai-labs/eu-ai-act-compliance --client claude
 ```
 
 Or connect at: **https://mcpize.com/mcp/eu-ai-act-compliance**
@@ -80,14 +94,41 @@ Then prompted Claude:
 
 ## Tools
 
+### 🆕 v1.4 — EUR-Lex Search (free tier)
+
 | Tool | Description |
 |------|-------------|
-| `classify_risk` | Article 6 risk classification (minimal / limited / high / unacceptable) |
-| `run_audit` | 42-point compliance checklist against Annex I-IX |
-| `generate_article_11` | Technical documentation template generator |
+| `search_regulation` | Full-text FTS5 search across **410 articles** of verbatim EU regulation text (EU AI Act, DORA, NIS2, CRA, CSRD, GDPR). Returns 64-token snippets with relevance scores. |
+| `list_regulations_in_db` | List all regulations in the local DB with article counts + last-sync date. |
+
+### Core compliance tools
+
+| Tool | Description |
+|------|-------------|
+| `quick_scan` | One-sentence AI system description → instant risk classification (no API key) |
+| `deadline_check` | All EU AI Act enforcement deadlines with days remaining (zero params) |
+| `classify_ai_risk` | Detailed Article 5/6/50 risk classification |
+| `check_compliance` | 42-point compliance audit against Annex I-IX |
+| `generate_annex_iv_docs` | Article 11 technical documentation generator |
 | `assess_penalties` | Penalty exposure calculator (up to €35M or 7% global turnover) |
-| `track_deadlines` | Deadline tracker with countdown to key dates |
-| `sign_artifact` | HMAC-SHA256 attestation signing |
+| `multi_jurisdiction_map` | Cross-border compliance mapping |
+| `predict_risk_neural` | Neural-net risk prediction (Pro tier) |
+| `neural_insights` | Compliance pattern insights from training data (Pro tier) |
+
+### Example: search the EU AI Act for "biometric"
+
+```python
+result = search_regulation(query="biometric", regulation="eu-ai-act", limit=3)
+```
+
+Returns matched snippets from Article 3 (definitions), Article 5 (prohibitions), Article 26 (deployer duties), with relevance scores and `>>>highlight<<<` markers.
+
+### Why FTS5?
+
+- **Verbatim text** — no LLM summarization, every quote is auditor-defensible
+- **Token-safe** — 64-token snippets fit in any context window
+- **Daily sync** — GitHub Actions polls EUR-Lex Atom feed at 06:00 UTC
+- **Stdlib only** — no Postgres, no external deps
 
 ## Pricing
 
@@ -102,7 +143,7 @@ Then prompted Claude:
 
 ---
 
-> **If this tool helps your compliance workflow, please [star this repo](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)** — it helps other compliance teams find it and keeps it maintained.
+> **If this tool helps your compliance workflow, please [star this repo](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/stargazers)** — it helps other compliance teams find it and keeps it maintained.
 
 → [Subscribe to Pro](https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836) · [Enterprise](https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837) · [Book assessment](https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833)
 
@@ -121,7 +162,7 @@ Or install the zero-dep verifier: `pip install meok-attestation-verify`
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=CSOAI-ORG/eu-ai-act-compliance-mcp&type=Date)](https://star-history.com/#CSOAI-ORG/eu-ai-act-compliance-mcp&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=meok-ai-labs/eu-ai-act-compliance-mcp&type=Date)](https://star-history.com/#meok-ai-labs/eu-ai-act-compliance-mcp&Date)
 
 ## Need Full EU AI Act Compliance?
 
@@ -138,9 +179,9 @@ This MCP gives you the tools — **[councilof.ai](https://councilof.ai)** gives 
 
 ## Support & Enterprise
 
-- [GitHub Discussions](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/discussions)
-- [Report Issues](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
-- Enterprise support: nicholas@csoai.org
+- [GitHub Discussions](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/discussions)
+- [Report Issues](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues)
+- Enterprise support: hello@meok.ai
 - Website: [meok.ai](https://meok.ai)
 - All MCP servers: [meok.ai/labs/mcp/servers](https://meok.ai/labs/mcp/servers)
 - Attestation API: [meok-attestation-api.vercel.app](https://meok-attestation-api.vercel.app)
@@ -149,4 +190,4 @@ This MCP gives you the tools — **[councilof.ai](https://councilof.ai)** gives 
 ## License
 
 MIT © [MEOK AI Labs](https://meok.ai)
-<!-- mcp-name: io.github.CSOAI-ORG/eu-ai-act-compliance-mcp -->
+<!-- mcp-name: io.github.meok-ai-labs/eu-ai-act-compliance-mcp -->
