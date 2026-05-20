@@ -7,7 +7,7 @@
 <div align="center">
 
 [![MCPize](https://mcpize.com/badge/@meok-ai-labs/eu-ai-act-compliance)](https://mcpize.com/mcp/eu-ai-act-compliance)
-[![GitHub stars](https://img.shields.io/github/stars/meok-ai-labs/eu-ai-act-compliance-mcp)](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/meok-ai-labs/eu-ai-act-compliance-mcp)](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)
 
 # EU AI Act + Multi-Regulation Compliance MCP Server
 
@@ -31,7 +31,7 @@ Search regulation text · Quote full articles · Classify AI risk levels · Run 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MEOK AI Labs](https://img.shields.io/badge/MEOK_AI_Labs-255+_servers-purple)](https://meok.ai)
 
-[Installation](#quick-start) · [Tools](#tools) · [Docs](https://meok.ai) · [Report Bug](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues)
+[Installation](#quick-start) · [Tools](#tools) · [Docs](https://meok.ai) · [Report Bug](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
 
 </div>
 
@@ -235,7 +235,7 @@ CMD ["npx", "tsx", "x402_server.ts"]
 
 ---
 
-> **If this tool helps your compliance workflow, please [star this repo](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/stargazers)** — it helps other compliance teams find it and keeps it maintained.
+> **If this tool helps your compliance workflow, please [star this repo](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)** — it helps other compliance teams find it and keeps it maintained.
 
 → [Subscribe to Pro](https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836) · [Enterprise](https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837) · [Book assessment](https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833)
 
@@ -271,8 +271,8 @@ This MCP gives you the tools — **[councilof.ai](https://councilof.ai)** gives 
 
 ## Support & Enterprise
 
-- [GitHub Discussions](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/discussions)
-- [Report Issues](https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp/issues)
+- [GitHub Discussions](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/discussions)
+- [Report Issues](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
 - Enterprise support: hello@meok.ai
 - Website: [meok.ai](https://meok.ai)
 - All MCP servers: [meok.ai/labs/mcp/servers](https://meok.ai/labs/mcp/servers)
