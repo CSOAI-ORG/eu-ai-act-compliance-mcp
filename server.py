@@ -45,6 +45,7 @@ def _attest(data: dict) -> dict:
     if _ATTESTATION_KEY == "dev-only-unsigned":
         data["_attestation"]["signed"] = False
         data["_attestation"]["warning"] = "UNSIGNED: Set MEOK_ATTESTATION_KEY for signed attestations"
+        data["_attestation"]["upgrade"] = "Get signed attestations your auditor accepts → https://councilof.ai"
     return data
 
 # ── Pydantic models for structured I/O (optional — graceful degradation if missing) ──
@@ -150,8 +151,8 @@ def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional
     if len(_usage[caller]) >= FREE_DAILY_LIMIT:
         return (
             f"Free tier limit reached ({FREE_DAILY_LIMIT}/day). "
-            "Upgrade to MEOK AI Labs Pro for unlimited access at $29/mo: "
-            "https://meok.ai/mcp/eu-ai-act/pro"
+            "Upgrade to Pro for unlimited access + signed attestations your auditor accepts. "
+            "77 days until Article 50 deadline → https://councilof.ai"
         )
     _usage[caller].append(now)
     return None
@@ -472,12 +473,15 @@ ANNEX_IV_SECTIONS = [
 ]
 
 # Key Timeline Dates — updated 17 May 2026 post-Omnibus political agreement (7 May 2026)
+# Source-of-truth alignment: the 7 May 2026 Digital Omnibus delayed Annex III high-risk
+# enforcement (Aug 2026 → Dec 2027) and Annex I product-safety (Aug 2027 → Aug 2028).
+# It did NOT delay Article 50 transparency / watermarking — that still bites on
+# 2 August 2026. Aligned with meok-watermark-attest-mcp + watermarking-authenticity-mcp.
 EU_AI_ACT_TIMELINE = [
     {"date": "2024-08-01", "event": "EU AI Act entered into force (Regulation (EU) 2024/1689 published in Official Journal)", "article": "Article 113"},
     {"date": "2025-02-02", "event": "Prohibited AI practices (Article 5) become enforceable; AI literacy obligations (Article 4) apply", "article": "Articles 4, 5"},
     {"date": "2025-08-02", "event": "Rules for General-Purpose AI (GPAI) models apply (Chapter V); notified bodies designated; governance framework operational", "article": "Articles 51-56, Chapter VII"},
-    {"date": "2026-08-02", "event": "Article 50 transparency obligations (watermarking + deepfake labelling for generative AI) become applicable", "article": "Article 50"},
-    {"date": "2026-12-02", "event": "🔥 NEAREST CLIFF — Hard compliance deadline for AI-generated content transparency, accelerated by the 7 May 2026 Digital Omnibus political agreement (deadline shortened from 6 months to 3 months past application). Providers must mark generative AI output as machine-readable AI-generated; deployers must disclose at first interaction.", "article": "Article 50(2), 50(4)"},
+    {"date": "2026-08-02", "event": "🔥 NEAREST CLIFF — Article 50 transparency obligations become enforceable. Providers of generative AI must mark output as machine-readable AI-generated; deployers must disclose at first user interaction; deepfake / AI-manipulated public-interest content must be labelled. NOT delayed by the 7 May 2026 Digital Omnibus.", "article": "Article 50"},
     {"date": "2027-08-02", "event": "GPAI compliance deadline for models placed on the market before 2 August 2025 (the 'grandfather' window closes)", "article": "Article 111(1)"},
     {"date": "2027-12-02", "event": "Full enforcement of all provisions for high-risk AI systems (Annex III) — delayed 16 months by EU Digital Omnibus Act (originally 2 Aug 2026)", "article": "Articles 6-49, Annex III"},
     {"date": "2028-08-02", "event": "Obligations for high-risk AI systems that are safety components of products under Union harmonisation legislation (Annex I) — delayed 12 months by Digital Omnibus (originally 2 Aug 2027)", "article": "Annex I, Article 6(1)"},
@@ -721,11 +725,12 @@ def deadline_check() -> dict:
         if days_remaining > 0 and next_upcoming is None:
             next_upcoming = deadline_entry
 
-    # Highlight the nearest cliff (Article 50 watermarking, 2 Dec 2026) per the
-    # 7 May 2026 Digital Omnibus political agreement that accelerated the
-    # AI-generated-content transparency deadline from 6m -> 3m past application.
+    # Highlight the nearest cliff (Article 50 transparency + watermarking, 2 Aug 2026).
+    # The 7 May 2026 Digital Omnibus political agreement delayed Annex III/I high-risk
+    # enforcement, but did NOT push Article 50 — providers + deployers must still mark
+    # and disclose generative AI output from 2 August 2026.
     watermarking_cliff = next(
-        (d for d in deadlines if d["article"] == "Article 50(2), 50(4)"), None
+        (d for d in deadlines if d["article"] == "Article 50"), None
     )
 
     return {
@@ -738,9 +743,9 @@ def deadline_check() -> dict:
             f"({next_upcoming['days_remaining']} days remaining)"
         ) if next_upcoming else "All EU AI Act deadlines have passed — full enforcement is in effect.",
         "nearest_enforcement_cliff": {
-            "date": "2026-12-02",
-            "event": "Article 50 watermarking + AI-generated content disclosure compliance",
-            "context": "Accelerated 7 May 2026 by the EU Digital Omnibus political agreement (deadline shortened from 6 months to 3 months past Article 50 application).",
+            "date": "2026-08-02",
+            "event": "Article 50 transparency + watermarking obligations become enforceable",
+            "context": "Article 50 was NOT delayed by the 7 May 2026 Digital Omnibus — only Annex III/I high-risk timelines were. Providers and deployers of generative AI face the full obligation set from 2 August 2026.",
             "applies_to": "Any provider of generative AI systems placing output on the EU market, and any deployer disclosing AI-generated content to users.",
             "days_remaining": watermarking_cliff["days_remaining"] if watermarking_cliff else None,
             "evidence_required": [
@@ -751,6 +756,7 @@ def deadline_check() -> dict:
             ],
             "meok_recommended_tools": [
                 "meok-watermark-attest-mcp (C2PA + HMAC-signed watermark attestations)",
+                "watermarking-authenticity-mcp (provenance + detector chain)",
                 "search_regulation tool above (verbatim Article 50 quote)",
                 "get_article_text(regulation='eu-ai-act', article_number=50)",
             ],
@@ -772,7 +778,7 @@ def deadline_check() -> dict:
 
 # ── Multi-Jurisdiction Support ────────────────────────────────
 JURISDICTIONS = {
-    "eu": {"name": "European Union", "framework": "EU AI Act (Regulation 2024/1689)", "enforcement": "Article 50 transparency 2 Aug 2026; watermarking-compliance cliff 2 Dec 2026 (post-Omnibus accelerated); Annex III high-risk 2 Dec 2027; Annex I product-safety 2 Aug 2028", "penalty_max": "EUR 35M or 7% global turnover"},
+    "eu": {"name": "European Union", "framework": "EU AI Act (Regulation 2024/1689)", "enforcement": "Article 50 transparency + watermarking 2 Aug 2026 (NOT delayed by Omnibus); Annex III high-risk 2 Dec 2027; Annex I product-safety 2 Aug 2028; public-authority legacy 2 Aug 2030", "penalty_max": "EUR 35M or 7% global turnover"},
     "uk": {"name": "United Kingdom", "framework": "UK AI Act (expected mid-2026)", "enforcement": "TBD — legislation pending", "penalty_max": "TBD"},
     "canada": {"name": "Canada", "framework": "AIDA (Artificial Intelligence and Data Act)", "enforcement": "Expected 2026", "penalty_max": "CAD 25M or 5% global revenue"},
     "singapore": {"name": "Singapore", "framework": "AI Governance Framework + Agentic AI", "enforcement": "Voluntary (mandatory for financial services)", "penalty_max": "Sector-specific"},

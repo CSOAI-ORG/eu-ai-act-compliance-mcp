@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-05-17
+
+### Changed
+
+- Realigned Article 50 framing to **2 August 2026** as the watermarking + transparency cliff. The 7 May 2026 Digital Omnibus delayed Annex III high-risk (→ 2 Dec 2027) and Annex I product-safety (→ 2 Aug 2028), but **did NOT delay Article 50**. Aligns this MCP with meok-watermark-attest-mcp and watermarking-authenticity-mcp.
+- `deadline_check` now returns `nearest_enforcement_cliff` keyed to 2 Aug 2026 (was incorrectly framed against a 2 Dec 2026 deadline that doesn't exist in the actual regulation).
+- JURISDICTIONS["eu"] enforcement string clarified: "Article 50 transparency + watermarking 2 Aug 2026 (NOT delayed by Omnibus)".
+
 ## [1.5.0] - 2026-05-13
 
 ### Added
