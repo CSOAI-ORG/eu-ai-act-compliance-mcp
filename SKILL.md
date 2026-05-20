@@ -29,12 +29,13 @@ print(result)
 See the MCP server for available tools.
 
 ## Pricing
-- Free tier: Basic compliance checks
-- Pro £199/mo: Full automation + signed attestations
+- Free: Basic compliance checks, 50 calls/day
+- Starter £29/mo: 200 calls/day + EUR-Lex FTS5 search
+- Pro £79/mo: 1,000 calls/day + multi-jurisdiction mapping + neural predictions + signed attestations
 - Enterprise: Contact for custom pricing
 
 ## Links
-- MCP Server: https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp
+- MCP Server: https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp
 - Documentation: https://meok.ai/docs/meok-eu-ai-act
 - Compliance Portal: https://compliance.meok.ai
 

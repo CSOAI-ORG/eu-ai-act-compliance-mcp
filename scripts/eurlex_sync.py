@@ -40,7 +40,6 @@ TRACKED_REGULATIONS = {
 
 SPARQL_ENDPOINT = "https://publications.europa.eu/webapi/rdf/sparql"
 DB_PATH = Path(__file__).parent.parent / "data" / "regulations.db"
-ATOM_FEED = "https://publications.europa.eu/webapi/notification/"
 
 
 def sparql_query(query: str, timeout: int = 30) -> dict:
@@ -373,24 +372,44 @@ def sync_regulation(conn: sqlite3.Connection, celex: str, reg_info: dict) -> int
     return len(articles)
 
 
-def check_for_updates() -> list[str]:
-    """Check EUR-Lex Atom notification feed for updates to tracked regulations."""
-    updated = []
-    try:
-        req = urllib.request.Request(
-            ATOM_FEED,
-            headers={"User-Agent": "MEOK-AI-Labs-EUR-Lex-Sync/1.0 (hello@meok.ai)"},
-        )
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            feed_xml = resp.read().decode("utf-8")
+def check_for_updates(db_path: Path = DB_PATH) -> list[str]:
+    """Detect tracked regulations whose Cellar work_date_modified is newer than our last sync.
 
-        # Check if any tracked CELEX IDs appear in the feed
-        for celex in TRACKED_REGULATIONS:
-            if celex in feed_xml:
-                updated.append(celex)
-                print(f"Update detected for {TRACKED_REGULATIONS[celex]['name']} ({celex})")
-    except Exception as e:
-        print(f"Atom feed check failed: {e}")
+    Previous implementation hit a 404'd Atom feed URL and silently always returned
+    an empty list — so the daily workflow effectively never auto-synced. This
+    version asks SPARQL for each work's latest `work_date_modified` and compares
+    it against `regulations.last_synced` in the local DB.
+    """
+    updated = []
+    last_synced: dict[str, str] = {}
+    if db_path.exists():
+        try:
+            with sqlite3.connect(str(db_path)) as conn:
+                for row in conn.execute("SELECT celex, last_synced FROM regulations"):
+                    last_synced[row[0]] = row[1] or ""
+        except Exception as e:
+            print(f"Could not read local sync timestamps: {e}")
+
+    for celex, reg_info in TRACKED_REGULATIONS.items():
+        query = f"""
+        PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>
+        SELECT ?modified WHERE {{
+          ?work cdm:resource_legal_id_celex ?celex .
+          FILTER(STR(?celex) = "{celex}")
+          OPTIONAL {{ ?work cdm:work_date_modified ?modified . }}
+        }} LIMIT 1
+        """
+        result = sparql_query(query)
+        bindings = result.get("results", {}).get("bindings", [])
+        if not bindings:
+            continue
+        remote_modified = bindings[0].get("modified", {}).get("value", "")
+        local = last_synced.get(celex, "")
+        # First-time sync, or remote is provably newer
+        if not local or (remote_modified and remote_modified > local[:10]):
+            updated.append(celex)
+            print(f"Update available for {reg_info['name']} ({celex}): "
+                  f"remote_modified={remote_modified or 'unknown'} local_synced={local[:10] or 'never'}")
     return updated
 
 

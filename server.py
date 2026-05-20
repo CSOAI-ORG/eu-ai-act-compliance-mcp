@@ -12,12 +12,40 @@ Install: pip install mcp httpx
 Run:     python server.py
 """
 
+import hashlib
+import hmac
 import json
 import math
-from datetime import datetime, timedelta
+import os
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Literal
 from collections import defaultdict
 from mcp.server.fastmcp import FastMCP
+
+_ATTESTATION_KEY = os.environ.get("MEOK_ATTESTATION_KEY")
+if not _ATTESTATION_KEY:
+    import warnings
+    warnings.warn("MEOK_ATTESTATION_KEY not set. Attestation signatures will be unsigned. Set this environment variable in production.", stacklevel=2)
+    _ATTESTATION_KEY = "dev-only-unsigned"
+
+def _attest(data: dict) -> dict:
+    """Add HMAC-SHA256 attestation to a response dict."""
+    payload = json.dumps(data, sort_keys=True, default=str)
+    signature = hmac.new(
+        _ATTESTATION_KEY.encode(),
+        payload.encode(),
+        hashlib.sha256
+    ).hexdigest()
+    data["_attestation"] = {
+        "algorithm": "HMAC-SHA256",
+        "signature": signature[:16],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "verifiable": _ATTESTATION_KEY != "dev-only-unsigned",
+    }
+    if _ATTESTATION_KEY == "dev-only-unsigned":
+        data["_attestation"]["signed"] = False
+        data["_attestation"]["warning"] = "UNSIGNED: Set MEOK_ATTESTATION_KEY for signed attestations"
+    return data
 
 # ── Pydantic models for structured I/O (optional — graceful degradation if missing) ──
 try:
@@ -78,21 +106,24 @@ _MEOK_API_KEY = _os.environ.get("MEOK_API_KEY", "")
 _neural_net = None
 
 try:
-    sys.path.insert(0, os.path.expanduser("~/clawd/meok-labs-engine/shared"))
-    from auth_middleware import check_access as _shared_check_access
+    from meok_auth import check_access as _shared_check_access
+except ImportError:
+    try:
+        from auth_middleware import check_access as _shared_check_access
+    except ImportError:
+        def _shared_check_access(api_key: str = ""):
+            """Fallback when shared auth engine is not available."""
+            if _MEOK_API_KEY and api_key and api_key == _MEOK_API_KEY:
+                return True, "OK", "pro"
+            if _MEOK_API_KEY and api_key and api_key != _MEOK_API_KEY:
+                return False, "Invalid API key. Get one at https://meok.ai/api-keys", "free"
+            return True, "OK", "free"
+
+try:
     from compliance_neural import ComplianceNeuralNet
     _neural_net = ComplianceNeuralNet("eu-ai-act")
-    _AUTH_ENGINE_AVAILABLE = True
 except ImportError:
-    _AUTH_ENGINE_AVAILABLE = False
-
-    def _shared_check_access(api_key: str = ""):
-        """Fallback when shared auth engine is not available."""
-        if _MEOK_API_KEY and api_key and api_key == _MEOK_API_KEY:
-            return True, "OK", "pro"
-        if _MEOK_API_KEY and api_key and api_key != _MEOK_API_KEY:
-            return False, "Invalid API key. Get one at https://meok.ai/api-keys", "free"
-        return True, "OK", "free"
+    _neural_net = None
 
 
 def check_access(api_key: str = ""):
@@ -440,14 +471,16 @@ ANNEX_IV_SECTIONS = [
     ]},
 ]
 
-# Key Timeline Dates
+# Key Timeline Dates — updated 17 May 2026 post-Omnibus political agreement (7 May 2026)
 EU_AI_ACT_TIMELINE = [
     {"date": "2024-08-01", "event": "EU AI Act entered into force (Regulation (EU) 2024/1689 published in Official Journal)", "article": "Article 113"},
     {"date": "2025-02-02", "event": "Prohibited AI practices (Article 5) become enforceable; AI literacy obligations (Article 4) apply", "article": "Articles 4, 5"},
     {"date": "2025-08-02", "event": "Rules for General-Purpose AI (GPAI) models apply (Chapter V); notified bodies designated; governance framework operational", "article": "Articles 51-56, Chapter VII"},
-    {"date": "2026-11-02", "event": "Article 50 transparency obligations for AI-generated content (watermarking, deepfake labelling) become enforceable", "article": "Article 50"},
+    {"date": "2026-08-02", "event": "Article 50 transparency obligations (watermarking + deepfake labelling for generative AI) become applicable", "article": "Article 50"},
+    {"date": "2026-12-02", "event": "🔥 NEAREST CLIFF — Hard compliance deadline for AI-generated content transparency, accelerated by the 7 May 2026 Digital Omnibus political agreement (deadline shortened from 6 months to 3 months past application). Providers must mark generative AI output as machine-readable AI-generated; deployers must disclose at first interaction.", "article": "Article 50(2), 50(4)"},
+    {"date": "2027-08-02", "event": "GPAI compliance deadline for models placed on the market before 2 August 2025 (the 'grandfather' window closes)", "article": "Article 111(1)"},
     {"date": "2027-12-02", "event": "Full enforcement of all provisions for high-risk AI systems (Annex III) — delayed 16 months by EU Digital Omnibus Act (originally 2 Aug 2026)", "article": "Articles 6-49, Annex III"},
-    {"date": "2028-08-02", "event": "Obligations for high-risk AI systems that are safety components of products under Union harmonisation legislation (Annex I) — delayed 12 months by Digital Omnibus", "article": "Annex I, Article 6(1)"},
+    {"date": "2028-08-02", "event": "Obligations for high-risk AI systems that are safety components of products under Union harmonisation legislation (Annex I) — delayed 12 months by Digital Omnibus (originally 2 Aug 2027)", "article": "Annex I, Article 6(1)"},
     {"date": "2030-08-02", "event": "Existing high-risk AI systems used by public authorities must comply (transitional provision)", "article": "Article 111(2)"},
 ]
 
@@ -551,7 +584,7 @@ def quick_scan(description: str) -> dict:
         ]
         penalty_range = "Up to EUR 35,000,000 or 7% of global annual turnover"
         deadline = "2 February 2025 (ALREADY IN EFFECT)"
-        return {
+        return _attest({
             "risk_level": risk_level,
             "matched_areas": matched_areas,
             "top_3_obligations": top_obligations,
@@ -560,7 +593,7 @@ def quick_scan(description: str) -> dict:
             "regulation": "Regulation (EU) 2024/1689",
             "next_step": "Use classify_ai_risk for detailed analysis or check_compliance for full audit",
             "meok_labs": "https://meok.ai",
-        }
+        })
 
     # Check high-risk (Annex III)
     for area in ANNEX_III_HIGH_RISK:
@@ -602,7 +635,7 @@ def quick_scan(description: str) -> dict:
                 "Consider voluntary adoption of high-risk requirements for trust",
             ]
 
-    return {
+    return _attest({
         "risk_level": risk_level,
         "matched_areas": matched_areas,
         "top_3_obligations": top_obligations,
@@ -611,7 +644,7 @@ def quick_scan(description: str) -> dict:
         "regulation": "Regulation (EU) 2024/1689",
         "next_step": "Use classify_ai_risk for detailed analysis or check_compliance for full audit",
         "meok_labs": "https://meok.ai",
-    }
+    })
 
 
 # ---------------------------------------------------------------------------
@@ -688,6 +721,13 @@ def deadline_check() -> dict:
         if days_remaining > 0 and next_upcoming is None:
             next_upcoming = deadline_entry
 
+    # Highlight the nearest cliff (Article 50 watermarking, 2 Dec 2026) per the
+    # 7 May 2026 Digital Omnibus political agreement that accelerated the
+    # AI-generated-content transparency deadline from 6m -> 3m past application.
+    watermarking_cliff = next(
+        (d for d in deadlines if d["article"] == "Article 50(2), 50(4)"), None
+    )
+
     return {
         "assessment_date": today.isoformat(),
         "next_deadline": next_upcoming,
@@ -697,7 +737,31 @@ def deadline_check() -> dict:
             f"Next deadline: {next_upcoming['date']} — {next_upcoming['event']} "
             f"({next_upcoming['days_remaining']} days remaining)"
         ) if next_upcoming else "All EU AI Act deadlines have passed — full enforcement is in effect.",
+        "nearest_enforcement_cliff": {
+            "date": "2026-12-02",
+            "event": "Article 50 watermarking + AI-generated content disclosure compliance",
+            "context": "Accelerated 7 May 2026 by the EU Digital Omnibus political agreement (deadline shortened from 6 months to 3 months past Article 50 application).",
+            "applies_to": "Any provider of generative AI systems placing output on the EU market, and any deployer disclosing AI-generated content to users.",
+            "days_remaining": watermarking_cliff["days_remaining"] if watermarking_cliff else None,
+            "evidence_required": [
+                "Machine-readable AI-origin marking (e.g. C2PA) on every generative output",
+                "First-interaction disclosure to user that content is AI-generated",
+                "Deployer disclosure for deepfakes / AI-manipulated text in matters of public interest",
+                "Cryptographically signed attestation of the marking pipeline for audit defence",
+            ],
+            "meok_recommended_tools": [
+                "meok-watermark-attest-mcp (C2PA + HMAC-signed watermark attestations)",
+                "search_regulation tool above (verbatim Article 50 quote)",
+                "get_article_text(regulation='eu-ai-act', article_number=50)",
+            ],
+        } if watermarking_cliff else None,
         "meok_labs": "https://meok.ai",
+        "buy_now": {
+            "starter_29gbp_mo": "https://buy.stripe.com/4gM6oJ1BW4gi6kd6as8k838",
+            "pro_79gbp_mo": "https://buy.stripe.com/eVq9AV4O87sudMF42k8k839",
+            "continuous_199gbp_mo": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+            "audit_5000gbp_one_time": "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833",
+        },
     }
 
 
@@ -708,7 +772,7 @@ def deadline_check() -> dict:
 
 # ── Multi-Jurisdiction Support ────────────────────────────────
 JURISDICTIONS = {
-    "eu": {"name": "European Union", "framework": "EU AI Act (Regulation 2024/1689)", "enforcement": "August 2, 2026", "penalty_max": "EUR 35M or 7% global turnover"},
+    "eu": {"name": "European Union", "framework": "EU AI Act (Regulation 2024/1689)", "enforcement": "Article 50 transparency 2 Aug 2026; watermarking-compliance cliff 2 Dec 2026 (post-Omnibus accelerated); Annex III high-risk 2 Dec 2027; Annex I product-safety 2 Aug 2028", "penalty_max": "EUR 35M or 7% global turnover"},
     "uk": {"name": "United Kingdom", "framework": "UK AI Act (expected mid-2026)", "enforcement": "TBD — legislation pending", "penalty_max": "TBD"},
     "canada": {"name": "Canada", "framework": "AIDA (Artificial Intelligence and Data Act)", "enforcement": "Expected 2026", "penalty_max": "CAD 25M or 5% global revenue"},
     "singapore": {"name": "Singapore", "framework": "AI Governance Framework + Agentic AI", "enforcement": "Voluntary (mandatory for financial services)", "penalty_max": "Sector-specific"},
@@ -750,6 +814,15 @@ def classify_ai_risk(
         Do not use as a substitute for qualified legal counsel. This tool
         provides technical compliance guidance, not legal advice.
     """
+    if _PYDANTIC_AVAILABLE:
+        try:
+            from pydantic import BaseModel as _BM, Field as _F, ValidationError as _VE
+            class _ClassifyInput(_BM):
+                description: str = _F(min_length=1, description="AI system description must be non-empty")
+            _ClassifyInput(description=description)
+        except Exception as _e:
+            return {"error": "validation_error", "message": str(_e)}
+
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
@@ -939,6 +1012,16 @@ def check_compliance(
         Do not use as a substitute for qualified legal counsel. This tool
         provides technical compliance guidance, not legal advice.
     """
+    if _PYDANTIC_AVAILABLE:
+        try:
+            from pydantic import BaseModel as _BM, Field as _F, ValidationError as _VE
+            class _ComplianceInput(_BM):
+                system_name: str = _F(min_length=1, description="System name must be non-empty")
+                purpose: str = _F(min_length=1, description="Purpose must be non-empty")
+            _ComplianceInput(system_name=system_name, purpose=purpose)
+        except Exception as _e:
+            return {"error": "validation_error", "message": str(_e)}
+
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
@@ -1452,6 +1535,15 @@ def assess_penalties(
         Do not use as a substitute for qualified legal counsel. This tool
         provides technical compliance guidance, not legal advice.
     """
+    if _PYDANTIC_AVAILABLE:
+        try:
+            from pydantic import BaseModel as _BM, Field as _F, ValidationError as _VE
+            class _PenaltyInput(_BM):
+                violation_type: str = _F(min_length=1, description="Violation type must be a non-empty string")
+            _PenaltyInput(violation_type=violation_type)
+        except Exception as _e:
+            return {"error": "validation_error", "message": str(_e)}
+
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
@@ -1927,7 +2019,7 @@ def audit_report(
 **MEOK AI Labs** | [meok.ai](https://meok.ai) | The only MCP server for EU AI Act compliance
 """
 
-    return {
+    return _attest({
         "format": "markdown",
         "report": report,
         "risk_classification": risk_level,
@@ -1938,7 +2030,7 @@ def audit_report(
             if item["overall_status"] == "FAIL"
         ],
         "meok_labs": "https://meok.ai",
-    }
+    })
 
 
 # ---------------------------------------------------------------------------

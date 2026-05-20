@@ -1,13 +1,13 @@
 {
   "name": "eu-ai-act-compliance-mcp",
   "version": "1.0.0",
-  "description": "Eu Ai Act Compliance tools for AI agents. Capabilities: classify ai risk, check compliance, generate documentation. Built by MEOK AI Labs.",
+  "description": "Six-regulation compliance MCP: EU AI Act, DORA, NIS2, Cyber Resilience Act, CSRD, GDPR. Verbatim EUR-Lex text with FTS5 search and canonical citations. Classify AI risk, run audits, generate Annex IV docs, track deadlines, sign attestations. Built by MEOK AI Labs.",
   "main": "server.py",
   "mcp": {
     "name": "EU AI Act Compliance",
     "vendor": "MEOK AI Labs",
     "homepage": "https://meok.ai",
-    "repository": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+    "repository": "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp",
     "runtime": "python",
     "categories": [
       "compliance",
@@ -33,11 +33,11 @@
     "ai-safety",
     "meok"
   ],
-  "author": "MEOK AI Labs <nicholas@meok.ai>",
+  "author": "MEOK AI Labs <hello@meok.ai>",
   "license": "MIT",
   "homepage": "https://meok.ai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp"
+    "url": "https://github.com/meok-ai-labs/eu-ai-act-compliance-mcp"
   }
 }
