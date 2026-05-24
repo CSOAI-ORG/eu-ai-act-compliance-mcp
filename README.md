@@ -71,11 +71,12 @@ npm install -g @meok-ai/eu-ai-act-compliance-mcp
 
 ## Why This Exists
 
-The EU AI Act (Reg 2024/1689) is now in force. Following the March 2026 Digital Omnibus vote, the timeline shifted:
+The EU AI Act (Reg 2024/1689) is now in force. Following the 7 May 2026 Digital Omnibus political agreement, the timeline is:
 
-- **Article 50** transparency obligations: **2 November 2026** (was August 2026)
-- **Annex III** high-risk systems: **2 December 2027** (was August 2026)
-- **Annex I** high-risk systems: **2 August 2028** (was August 2027)
+- **Article 50** transparency + watermarking obligations: **2 August 2026** (NOT delayed — Omnibus only pushed Annex III/I)
+- **Annex III** high-risk systems: **2 December 2027** (delayed 16 months, was 2 August 2026)
+- **Annex I** product-safety high-risk: **2 August 2028** (delayed 12 months, was 2 August 2027)
+- **GPAI grandfather window closes**: **2 August 2027** (pre-Aug-2025 models)
 
 Penalties remain unchanged: up to **€35M or 7% of global turnover**.
 
