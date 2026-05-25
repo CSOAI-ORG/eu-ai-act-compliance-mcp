@@ -28,24 +28,59 @@ if not _ATTESTATION_KEY:
     warnings.warn("MEOK_ATTESTATION_KEY not set. Attestation signatures will be unsigned. Set this environment variable in production.", stacklevel=2)
     _ATTESTATION_KEY = "dev-only-unsigned"
 
+_ART_50_DEADLINE = datetime(2026, 11, 2, tzinfo=timezone.utc)
+_ANNEX_III_DEADLINE = datetime(2027, 12, 2, tzinfo=timezone.utc)
+
+
+def _days_until(deadline: datetime) -> int:
+    return max(0, (deadline - datetime.now(timezone.utc)).days)
+
+
+# Stripe Payment Links — UTM-tagged so we can attribute revenue to MCP-tool installs
+_STRIPE_STARTER = "https://buy.stripe.com/4gM6oJ1BW4gi6kd6as8k838?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_PRO     = "https://buy.stripe.com/eVq9AV4O87sudMF42k8k839?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_GOV     = "https://buy.stripe.com/3cIbJ36Wg5kmdMF2Yg8k90t?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+
+
 def _attest(data: dict) -> dict:
-    """Add HMAC-SHA256 attestation to a response dict."""
+    """Add HMAC-SHA256 attestation + monetization tail to every response.
+
+    The monetization tail is visible in Claude Code / Cursor / Cline tool output
+    on EVERY call — turns 5,920+ monthly installs into ~30K monetization impressions.
+    """
     payload = json.dumps(data, sort_keys=True, default=str)
     signature = hmac.new(
         _ATTESTATION_KEY.encode(),
         payload.encode(),
         hashlib.sha256
     ).hexdigest()
+    is_signed = _ATTESTATION_KEY != "dev-only-unsigned"
     data["_attestation"] = {
         "algorithm": "HMAC-SHA256",
         "signature": signature[:16],
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "verifiable": _ATTESTATION_KEY != "dev-only-unsigned",
+        "verifiable": is_signed,
+        "signed": is_signed,
     }
-    if _ATTESTATION_KEY == "dev-only-unsigned":
-        data["_attestation"]["signed"] = False
-        data["_attestation"]["warning"] = "UNSIGNED: Set MEOK_ATTESTATION_KEY for signed attestations"
-        data["_attestation"]["upgrade"] = "Get signed attestations your auditor accepts → https://councilof.ai"
+    if not is_signed:
+        data["_attestation"]["warning"] = "UNSIGNED in free tier — set MEOK_ATTESTATION_KEY for auditor-verifiable certs"
+
+    # Monetization tail — visible in EVERY response (free tier + signed tier alike).
+    # Free tier: pushes upgrade; signed tier: shows current discount/cliff awareness.
+    days_to_art50 = _days_until(_ART_50_DEADLINE)
+    days_to_annex_iii = _days_until(_ANNEX_III_DEADLINE)
+    data["meok_upgrade"] = {
+        "cta": "Free MIT — auditor-verifiable HMAC + multi-jurisdiction crosswalks on Pro" if not is_signed else "You're on Pro · thanks for supporting the open-source maintainer",
+        "starter_29_gbp_mo": _STRIPE_STARTER,
+        "pro_79_gbp_mo": _STRIPE_PRO,
+        "governance_substrate_499_gbp_mo": _STRIPE_GOV,
+        "self_host_mit": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+        "deadlines": {
+            "article_50_genai_labelling": f"{days_to_art50} days · 2 November 2026",
+            "annex_iii_high_risk": f"{days_to_annex_iii} days · 2 December 2027",
+        },
+        "support_open_source": "If this tool saves you time, ⭐ at github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+    }
     return data
 
 # ── Pydantic models for structured I/O (optional — graceful degradation if missing) ──
@@ -149,10 +184,12 @@ def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional
     cutoff = now - timedelta(days=1)
     _usage[caller] = [t for t in _usage[caller] if t > cutoff]
     if len(_usage[caller]) >= FREE_DAILY_LIMIT:
+        days = _days_until(_ART_50_DEADLINE)
         return (
             f"Free tier limit reached ({FREE_DAILY_LIMIT}/day). "
-            "Upgrade to Pro for unlimited access + signed attestations your auditor accepts. "
-            "77 days until Article 50 deadline → https://councilof.ai"
+            f"Upgrade to Pro (£79/mo) for unlimited access + auditor-verifiable HMAC certs. "
+            f"{days} days until Article 50 GenAI labelling deadline (2 Nov 2026) "
+            f"→ {_STRIPE_PRO}"
         )
     _usage[caller].append(now)
     return None
