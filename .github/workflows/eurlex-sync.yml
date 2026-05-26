@@ -13,7 +13,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name "MEOK EUR-Lex Sync"
           git config user.email "hello@meok.ai"
-          git add data/regulations.db
+          git add -f data/regulations.db
           git diff --cached --quiet || git commit -m "chore: daily EUR-Lex regulation sync $(date +%Y-%m-%d)"
           git push
 
