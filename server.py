@@ -37,9 +37,9 @@ def _days_until(deadline: datetime) -> int:
 
 
 # Stripe Payment Links — UTM-tagged so we can attribute revenue to MCP-tool installs
-_STRIPE_STARTER = "https://buy.stripe.com/4gM6oJ1BW4gi6kd6as8k838?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
-_STRIPE_PRO     = "https://buy.stripe.com/eVq9AV4O87sudMF42k8k839?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
-_STRIPE_GOV     = "https://buy.stripe.com/3cIbJ36Wg5kmdMF2Yg8k90t?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_STARTER = "https://buy.stripe.com/dRmfZj2G03ceeQJ8iA8k90O?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_PRO     = "https://buy.stripe.com/00wfZjcgAeUW4c5cyQ8k90K?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_GOV     = "https://buy.stripe.com/14AfZjfsM6oq7oh2Yg8k90P?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
 
 
 def _attest(data: dict) -> dict:
@@ -800,8 +800,8 @@ def deadline_check() -> dict:
         } if watermarking_cliff else None,
         "meok_labs": "https://meok.ai",
         "buy_now": {
-            "starter_29gbp_mo": "https://buy.stripe.com/4gM6oJ1BW4gi6kd6as8k838",
-            "pro_79gbp_mo": "https://buy.stripe.com/eVq9AV4O87sudMF42k8k839",
+            "starter_29gbp_mo": "https://buy.stripe.com/dRmfZj2G03ceeQJ8iA8k90O",
+            "pro_79gbp_mo": "https://buy.stripe.com/00wfZjcgAeUW4c5cyQ8k90K",
             "continuous_199gbp_mo": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
             "audit_5000gbp_one_time": "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833",
         },
