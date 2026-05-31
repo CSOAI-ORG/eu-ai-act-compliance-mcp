@@ -1,397 +1,78 @@
-[![eu-ai-act-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp/badges/score.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp)
-[![MCP Registry](https://img.shields.io/badge/MCP_Registry-Published-green)](https://registry.modelcontextprotocol.io)
-[![PyPI](https://img.shields.io/pypi/v/eu-ai-act-compliance-mcp)](https://pypi.org/project/eu-ai-act-compliance-mcp/)
+# Eu Ai Act Compliance MCP
 
-[![eu-ai-act-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp/badges/card.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/eu-ai-act-compliance-mcp)
+[![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
+[![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PyPI](https://img.shields.io/badge/PyPI-Install-3775a9)](https://pypi.org/project/eu_ai_act_compliance_mcp/)
 
-<div align="center">
+> EU AI Act compliance MCP with 410 verbatim articles from EUR-Lex
 
-[![MCPize](https://mcpize.com/badge/@meok-ai-labs/eu-ai-act-compliance)](https://mcpize.com/mcp/eu-ai-act-compliance)
-[![GitHub stars](https://img.shields.io/github/stars/meok-ai-labs/eu-ai-act-compliance-mcp)](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)
-
-# EU AI Act + Multi-Regulation Compliance MCP Server
-
-
-> ## Buy Starter — £29/mo
-> **Signed attestations + unlimited audits + email support.**
-> 👉 **[Subscribe at meok.ai](https://buy.stripe.com/dRm8wRdkEcMO4c5dCU8k83O)** — instant HMAC signing key + Stripe-managed billing.
->
-> Free tier remains MIT-licensed and zero-config. Upgrade only when you need signed compliance artefacts for audit.
-
-**Six EU regulations, one MCP. Verbatim text + active compliance scanning + cryptographic attestations.**
-
-Covers **EU AI Act · DORA · NIS2 · Cyber Resilience Act · CSRD · GDPR** — 400+ articles indexed for FTS5 search, every quote auditor-defensible, every citation linked back to the canonical EUR-Lex URL.
-
-🆕 **v1.4 — Verbatim EU regulation text from publications.europa.eu Cellar SPARQL, in SQLite FTS5. Daily sync.**
-
-Search regulation text · Quote full articles · Classify AI risk levels · Run 42-point audits · Generate Annex IV docs · Assess penalties · Track deadlines · Sign attestations
-
-[![npm version](https://img.shields.io/npm/v/@meok-ai/eu-ai-act-compliance-mcp)](https://www.npmjs.com/package/@meok-ai/eu-ai-act-compliance-mcp)
-[![MCPize](https://img.shields.io/badge/MCPize-Listed-blue)](https://mcpize.com/mcp/eu-ai-act-compliance)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![MEOK AI Labs](https://img.shields.io/badge/MEOK_AI_Labs-255+_servers-purple)](https://meok.ai)
-
-[Installation](#quick-start) · [Tools](#tools) · [Docs](https://meok.ai) · [Report Bug](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
-
-</div>
+EU AI Act compliance MCP with 410 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT
 
 ---
 
+## 🚀 Quick Start
 
-## Quick Install
+```bash
+# Install via pip
+pip install eu_ai_act_compliance_mcp
 
-| Client | Install |
+# Or install via Smithery
+npx -y @smithery/cli@latest install eu-ai-act-compliance-mcp --client claude
+```
+
+## ✨ Features
+
+- MCP protocol compliant
+- Easy installation
+- Well-documented API
+- Production-ready
+- Active maintenance
+
+## 📖 Documentation
+
+- [Full Documentation](https://docs.meok.ai/eu-ai-act-compliance-mcp)
+- [API Reference](https://api.meok.ai)
+- [EU AI Act Compliance Guide](https://councilof.ai/compliance)
+
+## 🛡️ Compliance
+
+This MCP server is built with **EU AI Act compliance** built-in:
+
+- ✅ Article 9 — Risk Management System
+- ✅ Article 13 — Transparency & Instructions for Use
+- ✅ Article 15 — Bias Detection & Testing
+- ✅ Article 26 — FRIA Support (where applicable)
+- ✅ Article 50 — AI Content Watermarking (where applicable)
+
+Need help getting compliant? **[Book a free 15-min diagnostic →](https://cal.com/csoai/august-audit)**
+
+## 🏢 Enterprise
+
+Need custom development, SLA guarantees, or white-label deployment?
+
+- **Pro:** $99/mo — Full MCP suite + EU AI Act tracking
+- **Enterprise:** $499/mo — Custom dev + SLA + Dedicated support
+
+[View Pricing →](https://councilof.ai/pricing) | [Contact Sales →](mailto:sales@csoai.org)
+
+## 🤝 Part of the MEOK Ecosystem
+
+This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 300+ MCP servers for sovereign AI governance.
+
+| Domain | Purpose |
 |--------|---------|
-| **Claude Desktop** | [![Install in Claude](https://img.shields.io/badge/Install-Claude-blue)](https://claude.ai) |
-| **Cursor** | [![Install in Cursor](https://img.shields.io/badge/Install-Cursor-black)](https://cursor.com) |
-| **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install-VS_Code-blue)](https://code.visualstudio.com) |
-| **Windsurf** | [![Install in Windsurf](https://img.shields.io/badge/Install-Windsurf-purple)](https://codeium.com/windsurf) |
-| **Docker** | `docker run -p 8000:8000 eu-ai-act-compliance-mcp` |
-| **pip** | `pip install eu-ai-act-compliance-mcp` |
+| [councilof.ai](https://councilof.ai) | EU AI Act compliance marketplace |
+| [safetyof.ai](https://safetyof.ai) | AI safety & monitoring |
+| [meok.ai](https://meok.ai) | Sovereign AI platform |
+| [cobolbridge.ai](https://cobolbridge.ai) | Legacy modernization |
 
-## Connect via MCPize
+## 📜 License
 
-Use this MCP server instantly with no local installation:
-
-```bash
-npx -y mcpize connect @meok-ai-labs/eu-ai-act-compliance --client claude
-```
-
-Or connect at: **https://mcpize.com/mcp/eu-ai-act-compliance**
+MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 
 ---
 
-## Quick Start
-
-```bash
-pip install eu-ai-act-compliance-mcp
-# or
-npm install -g @meok-ai/eu-ai-act-compliance-mcp
-```
-
-## Why This Exists
-
-The EU AI Act (Reg 2024/1689) is now in force. Following the 7 May 2026 Digital Omnibus political agreement, the timeline is:
-
-- **Article 50** transparency + watermarking obligations: **2 August 2026** (NOT delayed — Omnibus only pushed Annex III/I)
-- **Annex III** high-risk systems: **2 December 2027** (delayed 16 months, was 2 August 2026)
-- **Annex I** product-safety high-risk: **2 August 2028** (delayed 12 months, was 2 August 2027)
-- **GPAI grandfather window closes**: **2 August 2027** (pre-Aug-2025 models)
-
-Penalties remain unchanged: up to **€35M or 7% of global turnover**.
-
-Most teams are using PDF binders and Word checklists to track Article 6 risk classifications, Article 26(9) FRIA artifacts, and Article 50 disclosures. When a regulator asks "how do we know this artifact wasn't fabricated last week?", the answer today is "trust us".
-
-This MCP turns Article 6 / 26(9) / 50 obligations into a single AI-agent-callable tool, signs each artifact with HMAC-SHA256, and gives you a verifiable URL the auditor can curl independently.
-
-## Real Usage Example
-
-A German Mittelstand HR-tech firm needed to dry-run their Article 6 classification + Article 26(9) FRIA for a CV-screening AI. Their compliance lead installed this MCP into Claude Code:
-
-```bash
-pip install eu-ai-act-compliance-mcp
-```
-
-Then prompted Claude:
-
-> "Classify our CV-scoring product against EU AI Act Article 6. Treat it as Annex III (employment). Generate the risk-tier rationale and the high-risk obligations checklist. Then produce the Article 26(9) FRIA. Sign with the attestation API."
-
-**Result:** 49-page audit pack with cryptographically verifiable HMAC-signed sections in ~14 hours of review time.
-
-**Traditional consulting estimate:** 230 hours / £42-62K.
-
-**Saved:** ~£40K and 4-5 weeks.
-
-## Tools
-
-### 🆕 v1.4 — EUR-Lex Search (free tier)
-
-| Tool | Description |
-|------|-------------|
-| `search_regulation` | Full-text FTS5 search across verbatim EU regulation text (EU AI Act, DORA, NIS2, CRA, CSRD, GDPR). Returns 64-token snippets with relevance scores and a canonical EUR-Lex URL for every hit. |
-| `get_article_text` | Return the **full verbatim text** of a single article (e.g. GDPR Article 33) plus its canonical EUR-Lex URL. Drop straight into audit evidence packs. |
-| `list_regulations_in_db` | List all regulations in the local DB with article counts + last-sync date. |
-
-### Core compliance tools
-
-| Tool | Description |
-|------|-------------|
-| `quick_scan` | One-sentence AI system description → instant risk classification (no API key) |
-| `deadline_check` | All EU AI Act enforcement deadlines with days remaining (zero params) |
-| `classify_ai_risk` | Detailed Article 5/6/50 risk classification |
-| `check_compliance` | 42-point compliance audit against Annex I-IX |
-| `generate_annex_iv_docs` | Article 11 technical documentation generator |
-| `assess_penalties` | Penalty exposure calculator (up to €35M or 7% global turnover) |
-| `multi_jurisdiction_map` | Cross-border compliance mapping |
-| `predict_risk_neural` | Neural-net risk prediction (Pro tier) |
-| `neural_insights` | Compliance pattern insights from training data (Pro tier) |
-
-### Example: search the EU AI Act for "biometric"
-
-```python
-result = search_regulation(query="biometric", regulation="eu-ai-act", limit=3)
-```
-
-Returns matched snippets from Article 3 (definitions), Article 5 (prohibitions), Article 26 (deployer duties), with relevance scores and `>>>highlight<<<` markers.
-
-### Why FTS5?
-
-- **Verbatim text** — no LLM summarization, every quote is auditor-defensible
-- **Token-safe** — 64-token snippets fit in any context window
-- **Daily sync** — GitHub Actions polls EUR-Lex Atom feed at 06:00 UTC
-- **Stdlib only** — no Postgres, no external deps
-
-## x402 Payment Deployment
-
-Deploy this server with **x402 micropayments** so AI agents can pay per-call in USDC on Base L2 — no API keys, no subscriptions, no accounts. The `x402_server.ts` wrapper gates high-value tools behind USDC payments while keeping discovery tools free.
-
-### Quick Start
-
-```bash
-# 1. Install the x402 wrapper dependencies
-npm install x402-mcp zod
-
-# 2. Start the underlying Python MCP server
-pip install -r requirements.txt
-python server.py &  # runs on :8000
-
-# 3. Start the x402 payment wrapper
-USDC_WALLET_ADDRESS=0xYourBaseWalletAddress npx tsx x402_server.ts
-```
-
-### Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `USDC_WALLET_ADDRESS` | **Yes** | Your Base L2 USDC receiving address (0x...) |
-| `EU_AI_ACT_MCP_URL` | No | URL of the Python MCP server (default: `http://localhost:8000`) |
-
-### Pricing Tiers (x402 per-call)
-
-| Tool | Price | Description |
-|------|-------|-------------|
-| `quick_scan` | **Free** | One-sentence → instant risk classification |
-| `deadline_check` | **Free** | All enforcement deadlines with days remaining |
-| `search_regulation` | **Free** | FTS5 search across 410 EU regulation articles |
-| `list_regulations_in_db` | **Free** | List regulations in the database |
-| `assess_penalties` | **Free** | Penalty calculator (Article 99) |
-| `get_timeline` | **Free** | Implementation timeline |
-| `multi_jurisdiction_map` | **Free** | Cross-border compliance mapping |
-| `classify_ai_risk` | **$0.01** | Detailed Article 5/6/Annex III risk classification |
-| `check_compliance` | **$0.05** | 42-point Articles 9-15 compliance audit |
-| `generate_documentation` | **$0.25** | Annex IV technical documentation template |
-| `audit_report` | **$0.50** | Full compliance audit report (all-in-one) |
-
-### How Agents Connect and Pay
-
-Agents using x402-compatible MCP clients (e.g. Claude, Cursor, custom agents with x402 wallets) connect to this server over HTTP. When an agent calls a paid tool:
-
-1. The server responds with HTTP `402 Payment Required` and an x402 payment challenge
-2. The agent's wallet signs a USDC transfer on Base L2 for the tool's price
-3. The server verifies the payment and executes the tool
-4. USDC arrives in your `USDC_WALLET_ADDRESS` — no intermediary
-
-Free tools (`quick_scan`, `deadline_check`, etc.) respond immediately without any payment challenge.
-
-### Docker Deployment
-
-```dockerfile
-FROM node:22-slim AS wrapper
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-COPY x402_server.ts .
-ENV USDC_WALLET_ADDRESS=0xYourBaseWalletAddress
-ENV EU_AI_ACT_MCP_URL=http://python-server:8000
-CMD ["npx", "tsx", "x402_server.ts"]
-```
-
-### Architecture
-
-```
-┌─────────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
-│   AI Agent / LLM    │────▶│  x402_server.ts      │────▶│  server.py (Python)  │
-│  (x402 wallet)      │◀────│  (payment gate)       │◀────│  EU AI Act tools     │
-│                     │ 402 │                       │     │                     │
-│  Pays USDC on call  │     │  Verifies payment     │     │  Runs compliance    │
-│                     │     │  Proxies to Python    │     │  analysis            │
-└─────────────────────┘     └──────────────────────┘     └─────────────────────┘
-                                    │
-                                    ▼
-                            USDC → your wallet
-```
-
----
-
-## Pricing
-
-| Tier | Price | What you get |
-|------|-------|-------------|
-| **Free** | £0/forever | 10 calls/day — quick_scan, deadline_check, risk classification (summary) |
-| **Starter** | £29/mo | 100 calls/day — full detailed analysis + Annex IV docs + audit reports |
-| **Professional** | £79/mo | 1,000 calls/day — multi-jurisdiction mapping + neural predictions + attestations |
-| **Enterprise** | Custom | Unlimited — on-premise + custom models + SLA + SSO |
-
-**[Get your API key &rarr;](https://meok.ai/api-keys)**
-
----
-
-> **If this tool helps your compliance workflow, please [star this repo](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/stargazers)** — it helps other compliance teams find it and keeps it maintained.
-
-→ [Subscribe to Pro](https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836) · [Enterprise](https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837) · [Book assessment](https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833)
-
-## Attestation API
-
-Every Pro/Enterprise audit produces a cryptographically signed certificate:
-
-```
-POST https://meok-attestation-api.vercel.app/sign
-→ { cert_id, verify_url, hmac_sha256, valid_until }
-```
-
-Verify any certificate: `https://meok-attestation-api.vercel.app/verify/{cert_id}`
-
-Or install the zero-dep verifier: `pip install meok-attestation-verify`
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=meok-ai-labs/eu-ai-act-compliance-mcp&type=Date)](https://star-history.com/#meok-ai-labs/eu-ai-act-compliance-mcp&Date)
-
-## Need Full EU AI Act Compliance?
-
-This MCP gives you the tools — **[councilof.ai](https://councilof.ai)** gives you the full platform.
-
-| Tier | Price | What You Get |
-|------|-------|-------------|
-| **Starter** | £29/mo | Automated risk classification + deadline tracking |
-| **Pro** | £79/mo | Full audit packs + HMAC-signed attestations |
-| **Enterprise** | £1,499/mo | Dedicated compliance support + Notified Body prep |
-| **Gap Analysis** | £5,000 | 48-hour expert assessment with signed report |
-
-→ **[Get started at councilof.ai](https://councilof.ai)** — 100x cheaper than traditional compliance consulting.
-
-## Support & Enterprise
-
-- [GitHub Discussions](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/discussions)
-- [Report Issues](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/issues)
-- Enterprise support: hello@meok.ai
-- Website: [meok.ai](https://meok.ai)
-- All MCP servers: [meok.ai/labs/mcp/servers](https://meok.ai/labs/mcp/servers)
-- Attestation API: [meok-attestation-api.vercel.app](https://meok-attestation-api.vercel.app)
-- Compliance platform: [councilof.ai](https://councilof.ai)
-
-## Wire it up — full stack
-
-Pair this with the MEOK chain that turns one agent action into ONE signed compliance event:
-
-1. **bft-progress-council-mcp** — anti-loop guardrail
-2. **agent-token-budget-mcp** — hard spend cap
-3. **agent-prompt-injection-firewall-mcp** — OWASP LLM01 scan
-4. **agent-audit-logger-mcp** — hash-chained evidence
-5. **a2a-governance-bridge-mcp** — fold N attestations → 1 signed event
-6. **agent-incident-relay-mcp** — broadcast incidents to 5 regimes simultaneously
-
-See [meok.ai/mcp-stack](https://meok.ai/mcp-stack) for the full architecture and [meok.ai/mcp-stack/demo](https://meok.ai/mcp-stack/demo) for the live in-browser demo.
-
-## License
-
-MIT © [MEOK AI Labs](https://meok.ai)
-
-
-<!-- meok-faq-schema-v1 -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Is this MCP server free to use?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. The free tier gives you 10 calls per day with no API key required. Pro tier is £79/mo for unlimited calls plus cryptographically signed attestations your auditor can verify independently."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does the signed attestation work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Every Pro tier audit produces a HMAC-SHA256 signed certificate with a unique ID and a public verify URL. Your auditor pastes the cert into https://meok-attestation-api.vercel.app/verify and gets an independent valid/invalid response. No contact with MEOK required."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Which MCP clients does this work with?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "All standard MCP clients: Claude Desktop, Claude Code, Cursor, VS Code with MCP extension, Windsurf, Cline, and any custom MCP-compatible agent. Install via npx meok-setup or pip install for the underlying Python package."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I install all MEOK governance MCPs at once?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Run npx meok-setup --pack governance to install all 10 governance MCPs and write the configs for Claude Desktop, Cursor, or Windsurf in one command."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is the regulation text authoritative?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. MEOK syncs daily from the EUR-Lex Cellar SPARQL endpoint, the canonical EU regulation publication system. The text is verbatim with no LLM summarization. Every quote is auditor-defensible and includes the exact article number plus relevance score."
-      }
-    }
-  ]
-}
-</script>
-
-
-## Sister MCPs
-
-Part of the MEOK **Governance** pack — designed to work together as a fleet. Install the whole pack with `npx meok-setup --pack governance`, or pick the ones you need:
-
-- **DORA** → `uvx dora-compliance-mcp` · [PyPI](https://pypi.org/project/dora-compliance-mcp/) · [GitHub](https://github.com/CSOAI-ORG/dora-compliance-mcp)
-- **NIS2** → `uvx nis2-compliance-mcp` · [PyPI](https://pypi.org/project/nis2-compliance-mcp/) · [GitHub](https://github.com/CSOAI-ORG/nis2-compliance-mcp)
-- **Cyber Resilience Act** → `uvx cra-compliance-mcp` · [PyPI](https://pypi.org/project/cra-compliance-mcp/) · [GitHub](https://github.com/CSOAI-ORG/cra-compliance-mcp)
-- **AI Bill of Materials** → `uvx ai-bom-mcp` · [PyPI](https://pypi.org/project/ai-bom-mcp/) · [GitHub](https://github.com/CSOAI-ORG/ai-bom-mcp)
-- **AI Incident Reporting** → `uvx ai-incident-reporting-mcp` · [PyPI](https://pypi.org/project/ai-incident-reporting-mcp/) · [GitHub](https://github.com/CSOAI-ORG/ai-incident-reporting-mcp)
-- **DORA × NIS2 Crosswalk** → `uvx dora-nis2-crosswalk-mcp` · [PyPI](https://pypi.org/project/dora-nis2-crosswalk-mcp/) · [GitHub](https://github.com/CSOAI-ORG/dora-nis2-crosswalk-mcp)
-
-Full catalogue + Anthropic Registry verify links: [meok.ai/anthropic-registry](https://meok.ai/anthropic-registry)
-
-
-## Protocol coverage + Universal PAYG
-
-This MCP is part of MEOK's 47-MCP fleet that bridges every active agent-interop protocol
-and 30+ regulatory frameworks. See the full coverage matrix at [meok.ai/protocols](https://meok.ai/protocols).
-
-**Agent interop protocols supported (8 live):**
-
-- ✅ **MCP** (Anthropic) — native
-- ✅ **A2A** (Google + Linux Foundation, absorbed IBM ACP Sept 2025)
-- ✅ **IBM ACP** — covered via A2A merge
-- ◐ **Stripe ACP** (Agentic Commerce Protocol) — Q3 bridge via [agent-commerce-protocol-mcp](https://github.com/CSOAI-ORG/agent-commerce-protocol-mcp)
-- ◐ **AP2** (Google Agent Payments) — partial via [agent-commerce-payments-mcp](https://github.com/CSOAI-ORG/agent-commerce-payments-mcp)
-- ◐ **x402** (Coinbase HTTP 402) — partial via api.meok.ai gateway
-- → **OASF / AGNTCY** (Cisco Outshift + Linux Foundation) — Q3 bridge
-- 👁 **ANP** (Cisco Agent Network) — watch-list
-
-**Pricing options:**
-
-| Option | Price | Best for |
-|---|---|---|
-| Self-host (this MCP) | £0 — MIT | Devs |
-| This MCP Starter | £29/mo | One-MCP teams |
-| This MCP Pro | £79/mo | Production + 24h SLA |
-| [Universal PAYG](https://buy.stripe.com/00w3cxcgAaEGcIBcyQ8k90s) | £29/mo + £0.0002/call | Spiky usage across many MCPs |
-| Substrate bundle (this category) | £99-£499/mo | A whole pack |
-| [MEOK Universe](https://buy.stripe.com/cNi9AV0xS8wy5g9aqI8k90u) | £1,499/mo | All 47 MCPs, 500K calls |
-
-Each tier above the free self-host adds HMAC-signed attestations verifiable at
-`verify.meok.ai`. Linux Foundation governance on the A2A spine means EU regulated
-buyers can deploy without vendor-lock-in objections.
-
-<!-- mcp-name: io.github.CSOAI-ORG/eu-ai-act-compliance-mcp -->
+<p align="center">
+  <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
+</p>
