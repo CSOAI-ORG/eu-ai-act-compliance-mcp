@@ -1,5 +1,11 @@
 # Eu Ai Act Compliance MCP
 
+> **⚖️ Need EU AI Act readiness _for your system_, fast?** This MCP is the free tool. For a tailored
+> readiness pack + a second opinion from the team behind the [CSOAI charter](https://csoai.org),
+> book a 30-min **Founder Office Hour (£29)** → **https://meok.ai/work**
+>
+> Part of the MEOK governance platform · [meok.ai](https://meok.ai) · [csoai.org](https://csoai.org)
+
 [![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
 [![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
