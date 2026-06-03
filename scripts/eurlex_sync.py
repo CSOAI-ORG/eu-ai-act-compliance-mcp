@@ -138,46 +138,58 @@ def fetch_regulation_text(manifestation_uri: str) -> str:
 
 
 def parse_articles_from_xhtml(xhtml: str, celex: str) -> list[dict]:
-    """Parse article-level elements from EUR-Lex XHTML using Akoma Ntoso eId patterns."""
+    """Parse article-level elements from EUR-Lex XHTML using Akoma Ntoso eId patterns.
+
+    For amending directives like CSRD (32022L2464), the body contains nested
+    "Article N" titles inside amendment blocks (which insert new articles into a
+    parent directive). The previous parser captured every "Article N" title as
+    if it were a top-level article of the current regulation, collapsing 17
+    detected markers into 11 stored rows via the UNIQUE(celex, article_number)
+    constraint.
+
+    Strategy now:
+      1. Always prefer structural top-level divs (`<div id="art_N">` or
+         `eId="art_N"`).
+      2. Only fall back to the visible `<p class="oj-ti-art">Article N` pattern
+         when NO structural divs are found (some legacy regulations).
+    """
     articles = []
     if not xhtml:
         return articles
 
-    # Pattern: <div id="art_N"> or <p class="oj-ti-art">Article N</p>
-    # Also handles eId attributes from Akoma Ntoso
-    article_pattern = re.compile(
-        r'(?:<div[^>]*(?:id=["\']art[_-]?(\d+)["\']|eId=["\']art_(\d+)["\'])[^>]*>|'
-        r'<p[^>]*class=["\'][^"\']*oj-ti-art[^"\']*["\'][^>]*>\s*Article\s+(\d+))',
+    structural_pattern = re.compile(
+        r'<div[^>]*(?:id=["\']art[_-]?(\d+)["\']|eId=["\']art_(\d+)["\'])[^>]*>',
+        re.IGNORECASE,
+    )
+    title_pattern = re.compile(
+        r'<p[^>]*class=["\'][^"\']*oj-ti-art[^"\']*["\'][^>]*>\s*Article\s+(\d+)',
         re.IGNORECASE,
     )
 
-    # Split by article markers
-    parts = article_pattern.split(xhtml)
+    has_structural = bool(structural_pattern.search(xhtml))
+    primary = structural_pattern if has_structural else title_pattern
 
-    # Simple text extraction: strip HTML tags
     def strip_tags(html: str) -> str:
         text = re.sub(r"<[^>]+>", " ", html)
         text = re.sub(r"\s+", " ", text)
         return text.strip()
 
-    # Try to find article boundaries
-    for match in article_pattern.finditer(xhtml):
-        art_num = match.group(1) or match.group(2) or match.group(3)
+    for match in primary.finditer(xhtml):
+        art_num = next((g for g in match.groups() if g), None)
         if not art_num:
             continue
 
         start = match.end()
-        # Find next article or end
-        next_match = article_pattern.search(xhtml, start)
+        next_match = primary.search(xhtml, start)
         end = next_match.start() if next_match else min(start + 5000, len(xhtml))
 
         content = strip_tags(xhtml[start:end])
-        if len(content) > 50:  # Skip very short fragments
+        if len(content) > 50:
             articles.append({
                 "celex": celex,
                 "article_number": int(art_num),
                 "article_id": f"art_{art_num}",
-                "content": content[:10000],  # Cap at 10K chars per article
+                "content": content[:10000],
                 "content_length": len(content),
             })
 

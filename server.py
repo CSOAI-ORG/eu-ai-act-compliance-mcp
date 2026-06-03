@@ -76,7 +76,7 @@ def _attest(data: dict) -> dict:
         "governance_substrate_499_gbp_mo": _STRIPE_GOV,
         "self_host_mit": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
         "deadlines": {
-            "article_50_genai_labelling": f"{days_to_art50} days · 2 November 2026",
+            "article_50_genai_labelling": f"{days_to_art50} days · 2 August 2026",
             "annex_iii_high_risk": f"{days_to_annex_iii} days · 2 December 2027",
         },
         "support_open_source": "If this tool saves you time, ⭐ at github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
@@ -188,7 +188,7 @@ def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional
         return (
             f"Free tier limit reached ({FREE_DAILY_LIMIT}/day). "
             f"Upgrade to Pro (£79/mo) for unlimited access + auditor-verifiable HMAC certs. "
-            f"{days} days until Article 50 GenAI labelling deadline (2 Nov 2026) "
+            f"{days} days until Article 50 GenAI labelling deadline (2 Aug 2026) "
             f"→ {_STRIPE_PRO}"
         )
     _usage[caller].append(now)
@@ -868,7 +868,7 @@ def classify_ai_risk(
 
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -1067,7 +1067,7 @@ def check_compliance(
 
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -1283,7 +1283,7 @@ def generate_documentation(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -1589,7 +1589,7 @@ def assess_penalties(
 
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -1689,7 +1689,7 @@ def get_timeline(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -1806,7 +1806,7 @@ def audit_report(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit(caller, tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -2119,7 +2119,7 @@ def multi_jurisdiction_map(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit("anonymous", tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -2200,7 +2200,7 @@ def predict_risk_neural(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     limit_err = _check_rate_limit("anonymous", tier)
     if limit_err:
         return {"error": "rate_limited", "message": limit_err}
@@ -2265,7 +2265,7 @@ def neural_insights(api_key: str = "") -> dict:
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return {"error": msg, "upgrade_url": "https://meok.ai/pricing"}
+        return {"error": msg, "upgrade_url": "https://councilof.ai"}
     if _neural_net is None:
         return {"error": "Neural engine not available. Install meok-labs-engine for neural insights."}
     return _neural_net.get_insights()
@@ -2484,7 +2484,7 @@ def iso_42001_crosswalk(clause: str = "", article: str = "", api_key: str = "") 
     try:
         allowed, msg, tier = _shared_check_access(api_key)
         if not allowed:
-            return {"error": msg, "upgrade": "https://meok.ai/pricing"}
+            return {"error": msg, "upgrade": "https://councilof.ai"}
     except Exception:
         tier = "free"
 
@@ -2537,6 +2537,123 @@ def iso_42001_crosswalk(clause: str = "", article: str = "", api_key: str = "") 
         "source": "MEOK AI Labs, derived from ISO/IEC 42001:2023 + Regulation (EU) 2024/1689.",
         "disclaimer": "Mapping is a working guide, not certification advice. Confirm with your Notified Body.",
     }
+
+
+# ---------------------------------------------------------------------------
+# Tool: cross_references_for_article — citation graph across all 6 regulations
+# ---------------------------------------------------------------------------
+# Scans every article body for "Article N" citations and returns INBOUND
+# citations (who cites this article) and OUTBOUND citations (what this article
+# cites). The graph is computed on demand from the local FTS5 DB.
+
+import re as _xref_re
+
+
+def _extract_outbound_citations(content: str) -> list[dict]:
+    """Find Article-N references inside one article's body text."""
+    citations = []
+    seen = set()
+    for m in _xref_re.finditer(r"\bArticle\s+(\d+)(?:\(([\w\d]+)\))?", content or ""):
+        art = int(m.group(1))
+        sub = m.group(2)
+        key = (art, sub)
+        if key in seen:
+            continue
+        seen.add(key)
+        citations.append({"article_number": art, "sub_paragraph": sub})
+    return citations
+
+
+@mcp.tool()
+def cross_references_for_article(regulation: str, article_number: int) -> dict:
+    """Citation graph for one article — what it cites + who cites it.
+
+    Args:
+        regulation: One of eu-ai-act, dora, nis2, cra, csrd, gdpr.
+        article_number: Article number (e.g. 33 for GDPR personal-data breach notification).
+
+    Returns:
+        outbound_citations: articles this one cites.
+        inbound_citations: articles across the full 6-regulation corpus that cite this one.
+            Each carries a snippet of the citing context so auditors see the reference.
+
+    Example: cross_references_for_article("gdpr", 33) reveals that GDPR Article 33
+    (personal data breach notification) is cited by NIS2 Article 35 and EU AI Act
+    Article 59 — a one-call view of the multi-regulation evidence trail.
+
+    Behavior:
+        Read-only. Idempotent. Free tier: 10/day. PAYG: £0.05/call. Pro: unlimited.
+    """
+    celex_map = {
+        "eu-ai-act": "32024R1689",
+        "dora": "32022R2554",
+        "nis2": "32022L2555",
+        "cra": "32024R2847",
+        "csrd": "32022L2464",
+        "gdpr": "32016R0679",
+    }
+    celex = celex_map.get(regulation.lower().strip())
+    if not celex:
+        return {"error": f"Unknown regulation '{regulation}'. Valid: {', '.join(celex_map)}"}
+    if not _REGULATIONS_DB.exists():
+        return {"error": "Regulation database not yet synced. Run scripts/eurlex_sync.py"}
+
+    celex_to_name = {v: k for k, v in celex_map.items()}
+    conn = _sqlite3.connect(str(_REGULATIONS_DB))
+    try:
+        own = conn.execute(
+            "SELECT content FROM articles WHERE celex = ? AND article_number = ?",
+            (celex, article_number),
+        ).fetchone()
+        outbound_raw = _extract_outbound_citations(own[0]) if own else []
+        outbound = [c for c in outbound_raw if c["article_number"] != article_number]
+
+        pattern = f"%Article {article_number}%"
+        rows = conn.execute(
+            "SELECT celex, article_number, content FROM articles WHERE content LIKE ? ORDER BY celex, article_number",
+            (pattern,),
+        ).fetchall()
+        inbound = []
+        for r_celex, r_art, r_content in rows:
+            if r_celex == celex and r_art == article_number:
+                continue
+            if _xref_re.search(rf"\bArticle\s+{article_number}\b", r_content or ""):
+                snippet = ""
+                m = _xref_re.search(
+                    rf"(.{{0,80}}\bArticle\s+{article_number}\b.{{0,120}})",
+                    r_content or "",
+                )
+                if m:
+                    snippet = m.group(1).strip().replace(
+                        f"Article {article_number}",
+                        f">>>Article {article_number}<<<",
+                    )
+                inbound.append({
+                    "regulation": celex_to_name.get(r_celex, r_celex),
+                    "celex": r_celex,
+                    "article_number": r_art,
+                    "snippet": snippet,
+                    "eur_lex_url": f"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:{r_celex}#art_{r_art}",
+                })
+
+        return {
+            "regulation": regulation.lower().strip(),
+            "celex": celex,
+            "article_number": article_number,
+            "outbound_citations": outbound,
+            "outbound_count": len(outbound),
+            "inbound_citations": inbound,
+            "inbound_count": len(inbound),
+            "summary": (
+                f"{regulation} Article {article_number} cites {len(outbound)} other articles, "
+                f"and is cited by {len(inbound)} articles across the 6-regulation corpus."
+            ),
+            "eur_lex_url": f"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:{celex}#art_{article_number}",
+            "source": "EUR-Lex Cellar API (publications.europa.eu) — verbatim text",
+            "disclaimer": "Citation graph computed from verbatim regulation text. Not legal advice.",
+        }
+    finally:
+        conn.close()
 
 
 def main():
