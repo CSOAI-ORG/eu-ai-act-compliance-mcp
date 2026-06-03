@@ -835,7 +835,7 @@ JURISDICTIONS = {
 def classify_ai_risk(
     description: str,
     caller: str = "anonymous",
-    api_key: str = "") -> str:
+    api_key: str = "") -> dict:
     """Classify an AI system's risk level under the EU AI Act.
 
     Takes a description of an AI system and returns its risk classification:
@@ -1026,7 +1026,7 @@ def check_compliance(
     has_human_oversight: bool = False,
     has_accuracy_testing: bool = False,
     caller: str = "anonymous",
-    api_key: str = "") -> str:
+    api_key: str = "") -> dict:
     """Run an EU AI Act compliance check against Articles 9-15 requirements.
 
     Takes system details and current compliance posture, returns a detailed
@@ -1677,7 +1677,7 @@ def assess_penalties(
 @mcp.tool()
 def get_timeline(
     caller: str = "anonymous",
-    api_key: str = "") -> str:
+    api_key: str = "") -> dict:
     """Get key EU AI Act implementation dates and deadlines.
 
     Returns all major enforcement milestones from entry into force through
