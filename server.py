@@ -2362,9 +2362,11 @@ def search_regulation(query: str, regulation: str = "", limit: int = 10) -> dict
         results = [
             {
                 "regulation": celex_to_name.get(r[0], r[0]),
+                "celex": r[0],
                 "article_number": r[1],
                 "snippet": r[3],
                 "relevance_score": round(abs(r[4]), 2),
+                "eur_lex_url": f"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:{r[0]}#art_{r[1]}",
             }
             for r in rows
         ]
@@ -2380,6 +2382,61 @@ def search_regulation(query: str, regulation: str = "", limit: int = 10) -> dict
         return meta
     except Exception as e:
         return {"error": f"FTS5 search error: {e}", "hint": "Try simpler query without special characters"}
+    finally:
+        conn.close()
+
+
+@mcp.tool()
+def get_article_text(regulation: str, article_number: int) -> dict:
+    """Return the full verbatim text of one article from EUR-Lex, with canonical URL.
+
+    Args:
+        regulation: One of eu-ai-act, dora, nis2, cra, csrd, gdpr.
+        article_number: Article number (e.g. 33 for GDPR personal data breach notification).
+
+    Returns:
+        Dict with regulation, celex, article_number, content (full verbatim text),
+        content_length, eur_lex_url. Drop straight into audit evidence packs —
+        every character comes from publications.europa.eu Cellar.
+
+    Behavior:
+        Read-only, stateless, idempotent. Free tier: 10/day. PAYG: £0.05/call. Pro: unlimited.
+    """
+    celex_map = {
+        "eu-ai-act": "32024R1689",
+        "dora": "32022R2554",
+        "nis2": "32022L2555",
+        "cra": "32024R2847",
+        "csrd": "32022L2464",
+        "gdpr": "32016R0679",
+    }
+    celex = celex_map.get(regulation.lower().strip())
+    if not celex:
+        return {"error": f"Unknown regulation '{regulation}'. Valid: {', '.join(celex_map)}"}
+    if not _REGULATIONS_DB.exists():
+        return {"error": "Regulation database not yet synced. Run scripts/eurlex_sync.py"}
+
+    conn = _sqlite3.connect(str(_REGULATIONS_DB))
+    try:
+        row = conn.execute(
+            "SELECT content, content_length FROM articles WHERE celex = ? AND article_number = ?",
+            (celex, article_number),
+        ).fetchone()
+        if not row:
+            return {
+                "error": f"Article {article_number} not found in {regulation}",
+                "hint": "Use list_regulations_in_db to see article counts or search_regulation to discover article numbers.",
+            }
+        return {
+            "regulation": regulation.lower().strip(),
+            "celex": celex,
+            "article_number": article_number,
+            "content": row[0],
+            "content_length": row[1],
+            "eur_lex_url": f"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:{celex}#art_{article_number}",
+            "source": "EUR-Lex Cellar API (publications.europa.eu) — verbatim text",
+            "disclaimer": "Verbatim quote from the Official Journal. Not legal advice.",
+        }
     finally:
         conn.close()
 
@@ -2547,6 +2604,44 @@ def iso_42001_crosswalk(clause: str = "", article: str = "", api_key: str = "") 
 # cites). The graph is computed on demand from the local FTS5 DB.
 
 import re as _xref_re
+from functools import lru_cache as _xref_lru_cache
+
+
+@_xref_lru_cache(maxsize=2048)
+def _xref_cached_inbound_for(celex: str, article_number: int) -> tuple:
+    """Cache the SQL scan + boundary check for cross-reference inbound lookups.
+    Keyed on (celex, article_number). Returns a tuple of (r_celex, r_art, snippet)
+    so the LRU cache can store it. Server-side cache only — clients get fresh
+    metadata on each call.
+    """
+    if not _REGULATIONS_DB.exists():
+        return tuple()
+    conn = _sqlite3.connect(str(_REGULATIONS_DB))
+    try:
+        pattern = f"%Article {article_number}%"
+        rows = conn.execute(
+            "SELECT celex, article_number, content FROM articles WHERE content LIKE ? ORDER BY celex, article_number",
+            (pattern,),
+        ).fetchall()
+        hits = []
+        for r_celex, r_art, r_content in rows:
+            if r_celex == celex and r_art == article_number:
+                continue
+            if _xref_re.search(rf"\bArticle\s+{article_number}\b", r_content or ""):
+                snippet = ""
+                m = _xref_re.search(
+                    rf"(.{{0,80}}\bArticle\s+{article_number}\b.{{0,120}})",
+                    r_content or "",
+                )
+                if m:
+                    snippet = m.group(1).strip().replace(
+                        f"Article {article_number}",
+                        f">>>Article {article_number}<<<",
+                    )
+                hits.append((r_celex, r_art, snippet))
+        return tuple(hits)
+    finally:
+        conn.close()
 
 
 def _extract_outbound_citations(content: str) -> list[dict]:
@@ -2608,33 +2703,18 @@ def cross_references_for_article(regulation: str, article_number: int) -> dict:
         outbound_raw = _extract_outbound_citations(own[0]) if own else []
         outbound = [c for c in outbound_raw if c["article_number"] != article_number]
 
-        pattern = f"%Article {article_number}%"
-        rows = conn.execute(
-            "SELECT celex, article_number, content FROM articles WHERE content LIKE ? ORDER BY celex, article_number",
-            (pattern,),
-        ).fetchall()
-        inbound = []
-        for r_celex, r_art, r_content in rows:
-            if r_celex == celex and r_art == article_number:
-                continue
-            if _xref_re.search(rf"\bArticle\s+{article_number}\b", r_content or ""):
-                snippet = ""
-                m = _xref_re.search(
-                    rf"(.{{0,80}}\bArticle\s+{article_number}\b.{{0,120}})",
-                    r_content or "",
-                )
-                if m:
-                    snippet = m.group(1).strip().replace(
-                        f"Article {article_number}",
-                        f">>>Article {article_number}<<<",
-                    )
-                inbound.append({
-                    "regulation": celex_to_name.get(r_celex, r_celex),
-                    "celex": r_celex,
-                    "article_number": r_art,
-                    "snippet": snippet,
-                    "eur_lex_url": f"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:{r_celex}#art_{r_art}",
-                })
+        # LRU-cached inbound scan (server-side, ~50ms cold, ~µs warm)
+        cached_hits = _xref_cached_inbound_for(celex, article_number)
+        inbound = [
+            {
+                "regulation": celex_to_name.get(r_celex, r_celex),
+                "celex": r_celex,
+                "article_number": r_art,
+                "snippet": snippet,
+                "eur_lex_url": f"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:{r_celex}#art_{r_art}",
+            }
+            for (r_celex, r_art, snippet) in cached_hits
+        ]
 
         return {
             "regulation": regulation.lower().strip(),
