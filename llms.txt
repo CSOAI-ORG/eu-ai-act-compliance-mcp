@@ -89,3 +89,8 @@ Neural network risk prediction with 12 structured inputs (Pro tier).
 result = quick_scan(description="AI system that screens job applicants by analyzing CVs")
 # Returns: risk_level="high-risk", matched Annex III Area 4 (Employment)
 ```
+
+## Pay-per-call (PAYG)
+
+This MCP supports MEOK_PAYG_KEY env var for £0.05-per-call billing without a subscription.
+Top up: https://councilof.ai/payg
