@@ -20,7 +20,14 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Literal
 from collections import defaultdict
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
+try:
+    from meok_x402 import paywalled, is_paid_call  # x402 per-call agent billing — no-op unless X402_ENABLED
+except ImportError:  # vendored module absent — stay free
+    def paywalled(*_a, **_k):
+        return lambda fn: fn
+    def is_paid_call() -> bool:
+        return False
 
 _ATTESTATION_KEY = os.environ.get("MEOK_ATTESTATION_KEY")
 if not _ATTESTATION_KEY:
@@ -180,6 +187,8 @@ def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional
     """Returns error string if rate-limited, else None. No API key required for free tier."""
     if tier == "pro":
         return None
+    if is_paid_call():
+        return None  # settled x402 payment — this call is already paid for
     now = datetime.now()
     cutoff = now - timedelta(days=1)
     _usage[caller] = [t for t in _usage[caller] if t > cutoff]
@@ -826,7 +835,7 @@ JURISDICTIONS = {
 def classify_ai_risk(
     description: str,
     caller: str = "anonymous",
-    api_key: str = "") -> str:
+    api_key: str = "") -> dict:
     """Classify an AI system's risk level under the EU AI Act.
 
     Takes a description of an AI system and returns its risk classification:
@@ -1017,7 +1026,7 @@ def check_compliance(
     has_human_oversight: bool = False,
     has_accuracy_testing: bool = False,
     caller: str = "anonymous",
-    api_key: str = "") -> str:
+    api_key: str = "") -> dict:
     """Run an EU AI Act compliance check against Articles 9-15 requirements.
 
     Takes system details and current compliance posture, returns a detailed
@@ -1232,6 +1241,7 @@ def check_compliance(
 # Tool 3: generate_documentation
 # ---------------------------------------------------------------------------
 @mcp.tool()
+@paywalled(price="$0.25")
 def generate_documentation(
     system_name: str,
     provider_name: str,
@@ -1245,8 +1255,11 @@ def generate_documentation(
     risk_management_description: str = "",
     human_oversight_description: str = "",
     caller: str = "anonymous",
-    api_key: str = "") -> str:
-    """Generate Article 11 / Annex IV compliant technical documentation template.
+    api_key: str = "",
+    ctx: Context = None) -> dict:
+    """COST WARNING: $0.25/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Generate Article 11 / Annex IV compliant technical documentation template.
 
     Produces a complete markdown template following the Annex IV structure of the
     EU AI Act. Fill in the bracketed sections with your specific information.
@@ -1539,13 +1552,17 @@ This template does not constitute legal advice — consult qualified legal couns
 # Tool 4: assess_penalties
 # ---------------------------------------------------------------------------
 @mcp.tool()
+@paywalled(price="$0.10")
 def assess_penalties(
     violation_type: str,
     annual_global_turnover_eur: float = 0,
     is_sme: bool = False,
     caller: str = "anonymous",
-    api_key: str = "") -> str:
-    """Calculate potential EU AI Act penalties for a given violation type.
+    api_key: str = "",
+    ctx: Context = None) -> dict:
+    """COST WARNING: $0.10/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Calculate potential EU AI Act penalties for a given violation type.
 
     Returns the applicable fine range per Article 99, considering company size
     and the type of violation (prohibited practices, high-risk non-compliance,
@@ -1660,7 +1677,7 @@ def assess_penalties(
 @mcp.tool()
 def get_timeline(
     caller: str = "anonymous",
-    api_key: str = "") -> str:
+    api_key: str = "") -> dict:
     """Get key EU AI Act implementation dates and deadlines.
 
     Returns all major enforcement milestones from entry into force through
@@ -1740,6 +1757,7 @@ def get_timeline(
 # Tool 6: audit_report
 # ---------------------------------------------------------------------------
 @mcp.tool()
+@paywalled(price="$0.50")
 def audit_report(
     system_name: str,
     provider_name: str,
@@ -1760,8 +1778,11 @@ def audit_report(
     annual_global_turnover_eur: float = 0,
     is_sme: bool = False,
     caller: str = "anonymous",
-    tier: str = "free", api_key: str = "") -> str:
-    """Generate a complete EU AI Act audit report.
+    tier: str = "free", api_key: str = "",
+    ctx: Context = None) -> dict:
+    """COST WARNING: $0.50/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Generate a complete EU AI Act audit report.
 
     Runs classification, compliance check, documentation generation, and
     penalty assessment — then combines everything into a comprehensive
@@ -2081,11 +2102,15 @@ def audit_report(
 # ---------------------------------------------------------------------------
 
 @mcp.tool()
+@paywalled(price="$0.10")
 def multi_jurisdiction_map(
     article: str,
     jurisdictions: list = None,
-    api_key: str = "") -> str:
-    """Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST.
+    api_key: str = "",
+    ctx: Context = None) -> dict:
+    """COST WARNING: $0.10/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Map EU AI Act articles to equivalent requirements in UK, Singapore, Canada, and US NIST.
 
     Behavior:
         This tool is read-only and stateless — it produces analysis output
@@ -2519,8 +2544,12 @@ _ISO_42001_TO_AI_ACT = {
 
 
 @mcp.tool()
-def iso_42001_crosswalk(clause: str = "", article: str = "", api_key: str = "") -> dict:
-    """Map ISO/IEC 42001 (AI Management System) clauses to EU AI Act articles, with evidence reuse hints.
+@paywalled(price="$0.10")
+def iso_42001_crosswalk(clause: str = "", article: str = "", api_key: str = "",
+    ctx: Context = None) -> dict:
+    """COST WARNING: $0.10/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Map ISO/IEC 42001 (AI Management System) clauses to EU AI Act articles, with evidence reuse hints.
 
     Args:
         clause: Optional ISO 42001 clause (4-10) to focus on. Empty = full crosswalk.

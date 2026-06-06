@@ -110,36 +110,36 @@ class TestClassifyAiRisk:
 
     def test_basic_returns_json_string(self):
         result = classify_ai_risk("A chatbot for answering FAQs")
-        assert isinstance(result, str)
-        data = json.loads(result)
+        assert isinstance(result, dict)
+        data = result
         assert "risk_level" in data or "classification" in data or "risk_classification" in data
 
     def test_high_risk_biometric(self):
         result = classify_ai_risk("Facial recognition system for biometric identification")
-        data = json.loads(result)
+        data = result
         risk = data.get("risk_level") or data.get("classification") or data.get("risk_classification", "")
         assert "high" in risk.lower() or "prohibited" in risk.lower()
 
     def test_prohibited_emotion_workplace(self):
         result = classify_ai_risk("Emotion recognition in the workplace for employee monitoring")
-        data = json.loads(result)
+        data = result
         risk = data.get("risk_level") or data.get("classification") or data.get("risk_classification", "")
         assert "prohibited" in risk.lower() or "high" in risk.lower()
 
     def test_minimal_risk(self):
         result = classify_ai_risk("AI-powered spell checker for documents")
-        data = json.loads(result)
+        data = result
         risk = data.get("risk_level") or data.get("classification") or data.get("risk_classification", "")
         assert "minimal" in risk.lower() or "low" in risk.lower() or "limited" in risk.lower()
 
     def test_empty_description(self):
         result = classify_ai_risk("")
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_with_caller(self):
         result = classify_ai_risk("A weather forecasting tool", caller="test_user")
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
 
@@ -163,8 +163,8 @@ class TestCheckCompliance:
             has_human_oversight=True,
             has_accuracy_testing=True,
         )
-        assert isinstance(result, str)
-        data = json.loads(result)
+        assert isinstance(result, dict)
+        data = result
         assert isinstance(data, dict)
 
     def test_non_compliant_missing_all(self):
@@ -174,7 +174,7 @@ class TestCheckCompliance:
             data_types="resumes and personal data",
             decision_scope="Automated candidate filtering",
         )
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
         # Should flag gaps when nothing is implemented
         blob = json.dumps(data).lower()
@@ -187,7 +187,7 @@ class TestCheckCompliance:
             data_types="",
             decision_scope="",
         )
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
 
@@ -208,8 +208,8 @@ class TestGenerateDocumentation:
             data_description="Customer support transcripts",
             architecture_description="Transformer-based LLM",
         )
-        assert isinstance(result, str)
-        data = json.loads(result)
+        assert isinstance(result, dict)
+        data = result
         assert isinstance(data, dict)
 
     def test_with_optional_params(self):
@@ -226,7 +226,7 @@ class TestGenerateDocumentation:
             risk_management_description="Continuous monitoring with human review",
             human_oversight_description="Legal expert reviews all outputs",
         )
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_empty_optional_params(self):
@@ -240,7 +240,7 @@ class TestGenerateDocumentation:
             data_description="Test data",
             architecture_description="Simple NN",
         )
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
 
@@ -252,34 +252,34 @@ class TestAssessPenalties:
 
     def test_prohibited_violation(self):
         result = assess_penalties(violation_type="prohibited", annual_global_turnover_eur=100_000_000)
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
         blob = json.dumps(data).lower()
         assert "35" in blob or "penalty" in blob or "fine" in blob or "million" in blob
 
     def test_high_risk_violation(self):
         result = assess_penalties(violation_type="high_risk", annual_global_turnover_eur=50_000_000)
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_incorrect_info_violation(self):
         result = assess_penalties(violation_type="incorrect_info")
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_sme_discount(self):
         result = assess_penalties(violation_type="prohibited", annual_global_turnover_eur=5_000_000, is_sme=True)
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_zero_turnover(self):
         result = assess_penalties(violation_type="prohibited", annual_global_turnover_eur=0)
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_invalid_violation_type(self):
         result = assess_penalties(violation_type="nonexistent_type")
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
         # Should handle gracefully (error or unknown classification)
 
@@ -292,20 +292,20 @@ class TestGetTimeline:
 
     def test_returns_json(self):
         result = get_timeline()
-        assert isinstance(result, str)
-        data = json.loads(result)
+        assert isinstance(result, dict)
+        data = result
         assert isinstance(data, dict)
 
     def test_contains_dates(self):
         result = get_timeline()
-        data = json.loads(result)
+        data = result
         blob = json.dumps(data)
         # Should mention at least one year
         assert "2024" in blob or "2025" in blob or "2026" in blob or "2027" in blob
 
     def test_idempotent(self):
-        r1 = json.loads(get_timeline())
-        r2 = json.loads(get_timeline())
+        r1 = get_timeline()
+        r2 = get_timeline()
         assert set(r1.keys()) == set(r2.keys())
 
 
@@ -327,8 +327,8 @@ class TestAuditReport:
             decision_scope="Shortlisting candidates for interview",
             architecture_description="Gradient boosted trees",
         )
-        assert isinstance(result, str)
-        data = json.loads(result)
+        assert isinstance(result, dict)
+        data = result
         assert isinstance(data, dict)
 
     def test_fully_compliant_audit(self):
@@ -350,7 +350,7 @@ class TestAuditReport:
             has_human_oversight=True,
             has_accuracy_testing=True,
         )
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
 
@@ -362,23 +362,23 @@ class TestMultiJurisdictionMap:
 
     def test_article_9(self):
         result = multi_jurisdiction_map(article="Article 9")
-        assert isinstance(result, str)
-        data = json.loads(result)
+        assert isinstance(result, dict)
+        data = result
         assert isinstance(data, dict)
 
     def test_article_10(self):
         result = multi_jurisdiction_map(article="Article 10")
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_with_jurisdictions(self):
         result = multi_jurisdiction_map(article="Article 5", jurisdictions=["uk", "us_nist"])
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
     def test_unknown_article(self):
         result = multi_jurisdiction_map(article="Article 999")
-        data = json.loads(result)
+        data = result
         assert isinstance(data, dict)
 
 
