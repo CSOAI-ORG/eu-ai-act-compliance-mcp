@@ -54,6 +54,7 @@ def _load_server_module():
 
     fastmcp_mod = types.ModuleType("mcp.server.fastmcp")
     fastmcp_mod.FastMCP = lambda *a, **k: _StubMCP()
+    fastmcp_mod.Context = type("Context", (), {})  # server.py imports Context for x402 paid tools
     sys.modules["mcp.server.fastmcp"] = fastmcp_mod
 
     sys.path.insert(0, str(REPO_ROOT))
