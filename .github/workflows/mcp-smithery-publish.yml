@@ -38,3 +38,12 @@ jobs:
           subject-name: ${{ github.repository }}
           subject-digest: sha256:${{ github.sha }}
           push-to-registry: false
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6052dd7b38e4c2b38f7a18fc46c4e64a99d5d2bb # v3.5.0
+
+      - name: Sign release artifact
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign sign --yes ghcr.io/csoai-org/${{ github.event.repository.name }}@${{ github.sha }}
