@@ -1,0 +1,167 @@
+{
+  "name": "eu-ai-act-compliance-mcp",
+  "description": "Eu Ai Act Compliance MCP Server by MEOK AI Labs",
+  "url": "https://proofof.ai/scorecard/eu-ai-act-compliance-mcp.html",
+  "version": "1.8.3",
+  "protocolVersion": "0.2.0",
+  "provider": {
+    "organization": "MEOK AI Labs",
+    "url": "https://meok.ai"
+  },
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "quick_scan",
+      "name": "Quick Scan",
+      "description": "quick_scan via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "deadline_check",
+      "name": "Deadline Check",
+      "description": "deadline_check via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "classify_ai_risk",
+      "name": "Classify Ai Risk",
+      "description": "classify_ai_risk via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "check_compliance",
+      "name": "Check Compliance",
+      "description": "check_compliance via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "generate_documentation",
+      "name": "Generate Documentation",
+      "description": "generate_documentation via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "assess_penalties",
+      "name": "Assess Penalties",
+      "description": "assess_penalties via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "get_timeline",
+      "name": "Get Timeline",
+      "description": "get_timeline via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "audit_report",
+      "name": "Audit Report",
+      "description": "audit_report via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "multi_jurisdiction_map",
+      "name": "Multi Jurisdiction Map",
+      "description": "multi_jurisdiction_map via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "predict_risk_neural",
+      "name": "Predict Risk Neural",
+      "description": "predict_risk_neural via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "neural_insights",
+      "name": "Neural Insights",
+      "description": "neural_insights via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "search_regulation",
+      "name": "Search Regulation",
+      "description": "search_regulation via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "get_article_text",
+      "name": "Get Article Text",
+      "description": "get_article_text via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "list_regulations_in_db",
+      "name": "List Regulations In Db",
+      "description": "list_regulations_in_db via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "iso_42001_crosswalk",
+      "name": "Iso 42001 Crosswalk",
+      "description": "iso_42001_crosswalk via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "cross_references_for_article",
+      "name": "Cross References For Article",
+      "description": "cross_references_for_article via eu-ai-act-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    }
+  ]
+}

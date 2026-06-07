@@ -1,0 +1,34 @@
+{
+  "acpVersion": "0.1",
+  "agent": {
+    "name": "eu-ai-act-compliance-mcp",
+    "description": "Eu Ai Act Compliance MCP Server by MEOK AI Labs",
+    "version": "1.8.3",
+    "provider": "MEOK AI Labs",
+    "interfaces": [
+      {
+        "type": "mcp",
+        "transport": "stdio",
+        "package": "eu-ai-act-compliance-mcp"
+      }
+    ],
+    "capabilities": [
+      "quick_scan",
+      "deadline_check",
+      "classify_ai_risk",
+      "check_compliance",
+      "generate_documentation",
+      "assess_penalties",
+      "get_timeline",
+      "audit_report",
+      "multi_jurisdiction_map",
+      "predict_risk_neural",
+      "neural_insights",
+      "search_regulation",
+      "get_article_text",
+      "list_regulations_in_db",
+      "iso_42001_crosswalk",
+      "cross_references_for_article"
+    ]
+  }
+}
