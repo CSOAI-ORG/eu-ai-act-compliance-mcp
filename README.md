@@ -1,3 +1,4 @@
+<!-- mcp-name: io.github.CSOAI-ORG/eu-ai-act-compliance-mcp -->
 # Eu Ai Act Compliance MCP
 
 > **⚖️ Need EU AI Act readiness _for your system_, fast?** This MCP is the free tool. For a tailored
@@ -104,3 +105,28 @@ MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 <p align="center">
   <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
 </p>
+
+
+## Configuration
+
+Add to your `claude_desktop_config.json` (Claude Desktop) or your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "eu-ai-act-compliance-mcp": {
+      "command": "uvx",
+      "args": ["eu-ai-act-compliance-mcp"]
+    }
+  }
+}
+```
+
+Or: `pip install eu-ai-act-compliance-mcp` then run the `eu-ai-act-compliance-mcp` command (stdio transport).
+
+## Examples
+
+Once configured, ask your assistant, for example:
+- "Use `quick_scan` to …"
+- "Use `deadline_check` to …"
+- "Use `classify_ai_risk` to …"
