@@ -1,4 +1,6 @@
 <!-- mcp-name: io.github.CSOAI-ORG/eu-ai-act-compliance-mcp -->
+[![MCP Scorecard: 90/100](https://img.shields.io/badge/proofof.ai-90%2F100-5b21b6)](https://proofof.ai/scorecard/eu-ai-act-compliance-mcp.html)
+
 # Eu Ai Act Compliance MCP
 
 > **⚖️ Need EU AI Act readiness _for your system_, fast?** This MCP is the free tool. For a tailored
