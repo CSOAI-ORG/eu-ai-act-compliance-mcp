@@ -44,9 +44,9 @@ def _days_until(deadline: datetime) -> int:
 
 
 # Stripe Payment Links — UTM-tagged so we can attribute revenue to MCP-tool installs
-_STRIPE_STARTER = "https://buy.stripe.com/dRmfZj2G03ceeQJ8iA8k90O?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
-_STRIPE_PRO     = "https://buy.stripe.com/00wfZjcgAeUW4c5cyQ8k90K?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
-_STRIPE_GOV     = "https://buy.stripe.com/14AfZjfsM6oq7oh2Yg8k90P?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_STARTER = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_PRO     = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_GOV     = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
 
 
 def _attest(data: dict) -> dict:
@@ -809,10 +809,10 @@ def deadline_check() -> dict:
         } if watermarking_cliff else None,
         "meok_labs": "https://meok.ai",
         "buy_now": {
-            "starter_29gbp_mo": "https://buy.stripe.com/dRmfZj2G03ceeQJ8iA8k90O",
-            "pro_79gbp_mo": "https://buy.stripe.com/00wfZjcgAeUW4c5cyQ8k90K",
-            "continuous_199gbp_mo": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
-            "audit_5000gbp_one_time": "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833",
+            "starter_29gbp_mo": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+            "pro_79gbp_mo": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+            "continuous_199gbp_mo": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+            "audit_5000gbp_one_time": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
         },
     }
 
@@ -923,7 +923,7 @@ def classify_ai_risk(
             result["upgrade"] = {
                 "message": f"Your system matched {len(result['prohibited_matches'])} prohibited practices. Get the full breakdown + remediation steps with MEOK Pro.",
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
                 "price": "From GBP 29/month",
             }
         return result
@@ -969,7 +969,7 @@ def classify_ai_risk(
             result["upgrade"] = {
                 "message": f"Your system matches {len(result['high_risk_matches'])} high-risk areas. Get the full analysis + compliance roadmap with MEOK Pro.",
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
                 "price": "From GBP 29/month",
             }
         return result
@@ -1197,7 +1197,7 @@ def check_compliance(
         result["upgrade"] = {
             "message": f"Your system scores {score:.1f}% with {failed} failing areas. Get the full 42-point checklist + remediation plan.",
             "url": "https://meok.ai/api-keys",
-            "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+            "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
             "price": "From GBP 29/month",
         }
     else:
@@ -1328,7 +1328,7 @@ def generate_documentation(
             },
             "upgrade": {
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
                 "price": "From GBP 29/month — includes unlimited documentation generation",
             },
             "free_alternative": "Use quick_scan or deadline_check (free, no API key needed) to assess your system first.",
@@ -1860,7 +1860,7 @@ def audit_report(
             },
             "upgrade": {
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
                 "price": "From GBP 29/month — includes unlimited audit reports",
             },
             "free_alternative": "Use quick_scan (free) for instant risk classification, or deadline_check for enforcement dates.",
@@ -2160,7 +2160,7 @@ def multi_jurisdiction_map(
             "supported_jurisdictions": ["EU", "UK", "Singapore", "Canada", "US (NIST)"],
             "upgrade": {
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
                 "price": "From GBP 29/month",
             },
         }
