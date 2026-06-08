@@ -46,7 +46,7 @@ jobs:
 
       - name: Create issue on update
         if: steps.check.outputs.has_updates == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
