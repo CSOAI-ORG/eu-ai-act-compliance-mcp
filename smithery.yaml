@@ -1,129 +1,28 @@
-name: eu-ai-act-compliance-mcp
-description: 'EU AI Act compliance for AI agents. Instant risk classification, 42-point
-  audit, Annex IV documentation generator, penalty calculator, multi-jurisdiction mapping.
-  Free tier available. Built by MEOK AI Labs.'
-version: 1.3.0
-tools:
-- name: quick_scan
-  description: One-sentence AI system description -> instant risk classification. No API key required.
-  parameters:
-  - name: description
-    type: string
-    required: true
-- name: deadline_check
-  description: All EU AI Act enforcement deadlines with days remaining. No parameters needed.
-  parameters: []
-- name: classify_ai_risk
-  description: Classify an AI system's risk level under the EU AI Act (prohibited, high-risk, limited, minimal).
-  parameters:
-  - name: description
-    type: string
-    required: true
-  - name: caller
-    type: string
-    required: false
-  - name: api_key
-    type: string
-    required: false
-- name: check_compliance
-  description: Run a 42-point EU AI Act compliance check against Articles 9-15 requirements.
-  parameters:
-  - name: system_name
-    type: string
-    required: true
-  - name: purpose
-    type: string
-    required: true
-  - name: data_types
-    type: string
-    required: true
-  - name: decision_scope
-    type: string
-    required: true
-  - name: has_risk_management
-    type: boolean
-    required: false
-  - name: has_data_governance
-    type: boolean
-    required: false
-  - name: has_technical_docs
-    type: boolean
-    required: false
-  - name: has_logging
-    type: boolean
-    required: false
-  - name: has_transparency_info
-    type: boolean
-    required: false
-  - name: has_human_oversight
-    type: boolean
-    required: false
-  - name: has_accuracy_testing
-    type: boolean
-    required: false
-  - name: api_key
-    type: string
-    required: false
-- name: generate_documentation
-  description: Generate Article 11 / Annex IV compliant technical documentation template. Requires Pro tier.
-  parameters:
-  - name: system_name
-    type: string
-    required: true
-  - name: provider_name
-    type: string
-    required: true
-  - name: intended_purpose
-    type: string
-    required: true
-  - name: description
-    type: string
-    required: true
-  - name: api_key
-    type: string
-    required: true
-- name: audit_report
-  description: Generate a complete EU AI Act audit report with risk classification, compliance check, penalty assessment. Requires Pro tier.
-  parameters:
-  - name: system_name
-    type: string
-    required: true
-  - name: purpose
-    type: string
-    required: true
-  - name: data_types
-    type: string
-    required: true
-  - name: api_key
-    type: string
-    required: true
-- name: assess_penalties
-  description: Calculate potential EU AI Act penalties for a given violation type.
-  parameters:
-  - name: violation_type
-    type: string
-    required: true
-  - name: annual_global_turnover_eur
-    type: number
-    required: false
-  - name: api_key
-    type: string
-    required: false
-- name: multi_jurisdiction_map
-  description: Map EU AI Act articles to UK, Singapore, Canada, and US NIST equivalents. Requires Pro tier.
-  parameters:
-  - name: article
-    type: string
-    required: true
-  - name: api_key
-    type: string
-    required: true
-- name: predict_risk_neural
-  description: Neural network-based risk prediction. Requires Pro tier.
-  parameters:
-  - name: system_name
-    type: string
-    required: true
-  - name: api_key
-    type: string
-    required: true
+# smithery.yaml — Smithery (https://smithery.ai) submission payload
+# Repo: CSOAI-ORG/eu-ai-act-compliance-mcp
+# Generated: 2026-06-09
+# Transport: streamable-HTTP (OCI container at ghcr.io/csoai-org/eu_ai_act_compliance)
+# See: DISTRIBUTION_GAPS_2026-06-08.md for the channel strategy
+runtime: container
+startCommand:
+  type: http
+  transport: streamable-http
+  port: 8081
+  path: /mcp
+  health: /healthz
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        description: "MEOK API key (optional; required for x402 paywalled tools)"
+        default: ""
+      x402PayTo:
+        type: string
+        description: "USDC address for x402 micropayments"
+        default: ""
+    additionalProperties: false
+build:
+  dockerfile: Dockerfile
+  dockerBuildArgs:
+    PKG: eu_ai_act_compliance
