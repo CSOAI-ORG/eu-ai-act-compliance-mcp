@@ -1,0 +1,17 @@
+{
+  "name": "knowing_yucca/eu-ai-act-compliance-mcp",
+  "title": "MEOK Eu Ai Act Compliance Mcp",
+  "description": "Compliance MCP server: eu-ai-act-compliance-mcp",
+  "readme": "# MEOK Eu Ai Act Compliance Mcp\n\nCompliance MCP from MEOK AI.",
+  "categories": [
+    "AI",
+    "Compliance",
+    "Governance"
+  ],
+  "defaultRunInput": {
+    "tool": "quick_scan",
+    "arguments": {
+      "system": "example"
+    }
+  }
+}
