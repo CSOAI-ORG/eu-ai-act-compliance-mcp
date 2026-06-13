@@ -1,0 +1,5 @@
+{
+  "name": "eu-ai-act-compliance-mcp",
+  "description": "Eu Ai Act (Regulation (EU) 2024/1689) compliance checking, risk classification, and documentation generation.",
+  "version": "1.8.3"
+}
