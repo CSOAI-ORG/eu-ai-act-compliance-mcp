@@ -1,0 +1,42 @@
+name: Cosign Keyless Sign
+
+# Keyless Sigstore signing for build artifacts.
+# Triggered on tagged releases. Verifies identity against the OIDC token
+# from the GitHub Actions workflow run (no long-lived private key needed).
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write   # required for OIDC keyless signing
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign container image (keyless)
+        env:
+          # Override IMAGE in the calling workflow or matrix if signing
+          # something other than the ghcr.io image referenced below.
+          IMAGE: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+        run: |
+          cosign sign --yes "$IMAGE"
+
+      - name: Verify signature (keyless)
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+        run: |
+          cosign verify \
+            --certificate-identity-regexp 'https://github.com/${{ github.repository }}' \
+            --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+            "$IMAGE"

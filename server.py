@@ -169,6 +169,26 @@ except ImportError:
     _neural_net = None
 
 
+
+# ── 2026-06-12: server-side metering via live /verify (fail-open) ──
+import urllib.request as _meter_urlreq
+import urllib.error as _meter_urlerr
+_METER_URL = _os.environ.get("MEOK_VERIFY_URL", "https://proofof.ai/verify")
+
+def _server_meter_check(api_key: str = "") -> dict:
+    """Calls the live /verify endpoint for server-side metering. Returns the JSON dict.
+    Fail-open: if /verify is unreachable or KV isn't configured, returns allowed=True
+    (so the local rate-limit in _check_rate_limit remains the safety net)."""
+    try:
+        data = json.dumps({"api_key": api_key, "tool": ""}).encode()
+        req = _meter_urlreq.Request(_METER_URL, data=data,
+            headers={"Content-Type": "application/json"}, method="POST")
+        with _meter_urlreq.urlopen(req, timeout=2.5) as r:
+            return json.loads(r.read())
+    except Exception:
+        return {"allowed": True, "tier": "free", "remaining": "unmetered"}
+
+
 def check_access(api_key: str = ""):
     """Unified access check — works with or without shared auth engine."""
     return _shared_check_access(api_key)
