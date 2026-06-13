@@ -1,5 +1,10 @@
 # Eu Ai Act Compliance MCP
 
+<!-- OpenSSF + hygiene badges (auto-inserted by add_openssf_badge.py) -->
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/CSOAI-ORG/eu-ai-act-compliance-mcp)
+[![License](https://img.shields.io/github/license/CSOAI-ORG/eu-ai-act-compliance-mcp)](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/blob/main/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/CSOAI-ORG/eu-ai-act-compliance-mcp)](https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/commits/main)
+
 > **⚖️ Need EU AI Act readiness _for your system_, fast?** This MCP is the free tool. For a tailored
 > readiness pack + a second opinion from the team behind the [CSOAI charter](https://csoai.org),
 > book a 30-min **Founder Office Hour (£29)** → **https://meok.ai/work**
