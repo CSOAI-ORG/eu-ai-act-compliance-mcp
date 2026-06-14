@@ -1,96 +1,33 @@
 # eu-ai-act-compliance-mcp
-> EU AI Act (Regulation (EU) 2024/1689) compliance checking, risk classification, and documentation generation. By MEOK AI Labs.
+> EU AI Act Compliance Eu Ai Act (Regulation (EU) 2024/1689) compliance checking, risk classification, and documentation generation. By MEOK AI Labs.
 
 ## Install
 pip install eu-ai-act-compliance-mcp
 
 ## Auth
-- Free tier: 10 calls/day, no API key needed
+- Free tier: 100 calls/month, no API key needed
 - Pro tier: unlimited, set MEOK_API_KEY env var
-- All tools are read-only and stateless
 
 ## Tools
 
 ### quick_scan
-Instant risk classification from a one-sentence AI system description. No API key required.
-- `description` (str, required): One-sentence description of the AI system
-- Returns: risk_level (prohibited/high-risk/limited-risk/minimal), matched_areas, top_3_obligations, deadline, penalty_range
-- Use when: You need a fast risk assessment before deeper analysis
+Instant compliance check from a system description. No API key required.
+- `system` (str): One-sentence AI system description
+- Returns: compliance_status, top_obligations
 
 ### deadline_check
-All EU AI Act enforcement deadlines with days remaining. No parameters needed.
-- Returns: List of milestone dates with days_remaining and applicable articles
-- Use when: Checking which deadlines apply or how much time remains
+Regulatory deadlines with days remaining.
+- Returns: List of dates with days_remaining
 
-### classify_ai_risk
-Detailed risk classification against Article 5 (prohibited), Annex III (high-risk), Article 50 (limited-risk).
-- `description` (str, required): Description of AI system, purpose, data, deployment context
-- `caller` (str, optional): Identifier for rate limiting
-- `api_key` (str, optional): MEOK API key for pro tier
-- Returns: classification, confidence, prohibited_matches, high_risk_matches, limited_risk_triggers, analysis
-- Use when: You need detailed Article-level classification with matched keywords
+### framework_scan
+Detailed compliance assessment.
+- `framework` (str, required): EU or other framework
+- `system` (str, required): System description
+- Returns: compliance_score, gaps, remediation
 
-### check_compliance
-42-point compliance audit against Articles 9-15 for high-risk AI.
-- `system_name` (str, required), `purpose` (str, required), `data_types` (str, required), `decision_scope` (str, required)
-- `has_risk_management`, `has_data_governance`, `has_technical_docs`, `has_logging`, `has_transparency_info`, `has_human_oversight`, `has_accuracy_testing` (all bool, default False): Current compliance posture for Articles 9-15
-- `api_key` (str, optional): MEOK API key
-- Returns: Per-article pass/fail checklist, compliance_score, gaps, remediation steps
-- Use when: Running a structured compliance gap analysis
+## Endpoints
+- MCP: https://gateway.meok.ai/mcp
+- A2A: https://gateway.meok.ai/.well-known/agent-card.json
 
-### generate_documentation
-Generates Annex IV technical documentation template (Pro tier).
-- Required: `system_name`, `provider_name`, `provider_contact`, `version`, `intended_purpose`, `description`, `data_description`, `architecture_description` (all str)
-- Optional: `performance_metrics`, `risk_management_description`, `human_oversight_description` (str), `api_key` (str)
-- Returns: Complete Annex IV markdown documentation template (8 sections)
-- Use when: Generating technical documentation for conformity assessment
-
-### assess_penalties
-Calculate potential fines per Article 99.
-- `violation_type` (str, required): "prohibited" | "high_risk_obligations" | "incorrect_information"
-- `annual_global_turnover_eur` (float, optional): Annual global turnover in EUR
-- `is_sme` (bool, default False): SME status for proportionate penalties
-- `api_key` (str, optional): MEOK API key
-- Returns: Penalty calculation, aggravating/mitigating factors
-- Use when: Assessing financial risk exposure for non-compliance
-
-### get_timeline
-All implementation milestones from entry into force through full enforcement.
-- `api_key` (str, optional): MEOK API key
-- Returns: Chronological list of enforcement dates with applicable articles
-- Use when: Planning a compliance roadmap
-
-### audit_report
-All-in-one comprehensive audit report combining classification, compliance, docs, and penalties (Pro tier).
-- Takes all parameters from check_compliance + generate_documentation + assess_penalties
-- Returns: Complete markdown audit report
-- Use when: Compliance officers need a single comprehensive deliverable
-
-### multi_jurisdiction_map
-Map EU AI Act articles to equivalent UK, Singapore, Canada, US NIST requirements (Pro tier).
-- `article` (str, required): EU AI Act article (e.g. "Article 5", "Article 9")
-- `jurisdictions` (list, optional): Filter jurisdictions, default all
-- `api_key` (str, optional): MEOK API key
-- Returns: Cross-jurisdiction mapping of equivalent requirements
-- Use when: Operating across multiple regulatory jurisdictions
-
-### predict_risk_neural
-Neural network risk prediction with 12 structured inputs (Pro tier).
-- `system_name` (str, required): AI system name
-- `uses_biometric` (bool), `uses_health_data` (bool), `uses_financial_data` (bool)
-- `has_human_oversight` (bool), `affected_users` (int), `sector` (str)
-- `has_documentation` (bool), `prior_incidents` (int), `deployed_cross_border` (bool)
-- `model_explainable` (bool), `api_key` (str)
-- Returns: Risk scores, violation probability, remediation urgency
-- Use when: Quantitative risk scoring for portfolio-level AI governance
-
-## Quick Example
-```python
-result = quick_scan(description="AI system that screens job applicants by analyzing CVs")
-# Returns: risk_level="high-risk", matched Annex III Area 4 (Employment)
-```
-
-## Pay-per-call (PAYG)
-
-This MCP supports MEOK_PAYG_KEY env var for £0.05-per-call billing without a subscription.
-Top up: https://councilof.ai/payg
+## License
+MIT — https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp/blob/main/LICENSE

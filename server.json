@@ -1,34 +1,77 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.CSOAI-ORG/eu-ai-act-compliance-mcp",
-  "version": "1.8.12",
-  "description": "Eu Ai Act Compliance MCP Server by MEOK AI Labs",
+  "name": "CSOAI-ORG/eu-ai-act-compliance-mcp",
+  "title": "EU AI Act Compliance",
+  "version": "1.8.3",
+  "description": "Eu Ai Act (Regulation (EU) 2024/1689) compliance checking, risk classification, and documentation generation. Part of the MEOK 28-hive MCP governance mesh. 13 unified frameworks + attestation chain.",
+  "websiteUrl": "https://meok.ai/eu-ai-act-compliance-mcp",
   "repository": {
+    "type": "git",
     "url": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
-    "source": "github"
+    "source": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp"
   },
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/CSOAI-ORG/eu-ai-act-compliance-mcp/main/assets/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "256x256"
+      ],
+      "theme": "dark"
+    }
+  ],
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "eu-ai-act-compliance-mcp",
-      "version": "1.8.12",
-      "runtimeHint": "python",
+      "version": "1.8.3",
       "transport": {
         "type": "stdio"
       }
     }
   ],
-  "icons": [
-    {
-      "src": "https://meok.ai/icons/eu-ai-act-compliance-mcp.png",
-      "mimeType": "image/png",
-      "sizes": [
-        "any"
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "category": "ai-governance",
+      "subcategories": [
+        "compliance",
+        "audit"
       ],
-      "theme": "light"
+      "tier": "flagship",
+      "openSsfScorecard": "7.06/10"
+    }
+  },
+  "metadata": {
+    "publisher": "MEOK AI Labs",
+    "categories": [
+      "compliance",
+      "ai-governance"
+    ]
+  },
+  "examples": [
+    {
+      "name": "Quick scan via eu-ai-act-compliance-mcp",
+      "description": "Run a compliance check using the MCP server.",
+      "input": {
+        "tool": "quick_scan",
+        "arguments": {
+          "system": "example"
+        }
+      }
     }
   ],
-  "websiteUrl": "https://meok.ai/eu-ai-act-compliance-mcp",
+  "resources": [
+    {
+      "uri": "https://docs.meok.ai/eu-ai-act-compliance-mcp/",
+      "name": "eu-ai-act-compliance-mcp documentation",
+      "mimeType": "text/html"
+    },
+    {
+      "uri": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+      "name": "eu-ai-act-compliance-mcp on GitHub",
+      "mimeType": "text/html"
+    }
+  ],
   "publisher": {
     "name": "CSOAI Ltd",
     "url": "https://csoai.org"
@@ -36,24 +79,5 @@
   "categories": [
     "compliance",
     "ai-governance"
-  ],
-  "examples": [
-    {
-      "name": "quick_scan",
-      "input": {
-        "system": "EU healthcare diagnostic AI"
-      }
-    }
-  ],
-  "resources": [
-    "https://docs.meok.ai/eu-ai-act-compliance-mcp",
-    "https://csoai.org/manifesto"
-  ],
-  "metadata": {
-    "publisher": "MEOK AI Labs",
-    "categories": [
-      "compliance",
-      "ai-governance"
-    ]
-  }
+  ]
 }
