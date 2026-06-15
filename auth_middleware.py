@@ -11,6 +11,15 @@ Get a free key: https://proofof.ai/get-key.html   Upgrade: https://buy.stripe.co
 """
 from __future__ import annotations
 import json, os, urllib.request, urllib.error
+from enum import Enum
+
+
+class Tier(str, Enum):
+    """Compatibility enum for callers/tests expecting auth_middleware.Tier."""
+    FREE = "free"
+    PRO = "pro"
+    PAYG = "payg"
+    CSOAI = "csoai"
 
 _VERIFY_URL = os.environ.get("MEOK_VERIFY_URL", "https://proofof.ai/verify")
 _PRO = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t"
