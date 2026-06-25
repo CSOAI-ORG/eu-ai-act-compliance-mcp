@@ -343,7 +343,19 @@ ANNEX_III_HIGH_RISK = [
             "Evaluation and classification of emergency calls (dispatch prioritisation)",
             "Risk assessment for migration, asylum, and visa applications",
         ],
-        "keywords": ["credit scor", "insurance", "loan", "mortgage", "benefit eligib", "welfare", "public service", "emergency dispatch", "asylum", "visa", "immigration"],
+        "keywords": ["credit scor", "insurance", "loan", "mortgage", "benefit eligib", "welfare", "public service", "emergency dispatch", "asylum", "visa", "immigration", "patient triage", "emergency healthcare", "medical triage", "triage", "dispatch prioriti", "emergency call"],
+    },
+    {
+        "area": "6(1)/I",
+        "title": "Medical Devices & Clinical Diagnostic AI (Article 6(1) + Annex I, MDR/IVDR)",
+        "article_ref": "Article 6(1) + Annex I (MDR 2017/745 / IVDR 2017/746)",
+        "description": "AI that is, or is a safety component of, a medical device or in-vitro diagnostic — incl. diagnostic imaging, clinical decision support, and cancer/disease detection. High-risk under Article 6(1) + Annex I even though NOT listed in Annex III.",
+        "subcategories": [
+            "Diagnostic / radiology / medical-imaging AI (cancer, tumour, pathology detection)",
+            "Clinical decision support and patient-monitoring AI",
+            "AI safety components of medical devices (MDR) and in-vitro diagnostics (IVDR)",
+        ],
+        "keywords": ["medical device", "radiolog", "medical imaging", "diagnostic imaging", "clinical decision support", "clinical diagnos", "disease diagnos", "cancer detect", "cancer diagnos", "tumour", "tumor", "oncolog", "pathology ai", "mammograph", "patient monitor", "sepsis predict", "patient deterioration", "in vitro diagnostic", "ivdr", "mdr device", "medical ai", "clinical ai"],
     },
     {
         "area": 6,
