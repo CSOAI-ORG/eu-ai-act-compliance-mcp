@@ -1,11 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.CSOAI-ORG/eu-ai-act-compliance-mcp",
-<<<<<<< Updated upstream
   "version": "1.8.14",
-=======
-  "version": "1.8.9",
->>>>>>> Stashed changes
   "description": "Eu Ai Act Compliance MCP Server by MEOK AI Labs",
   "repository": {
     "url": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
@@ -15,11 +11,7 @@
     {
       "registryType": "pypi",
       "identifier": "eu-ai-act-compliance-mcp",
-<<<<<<< Updated upstream
       "version": "1.8.14",
-=======
-      "version": "1.8.9",
->>>>>>> Stashed changes
       "runtimeHint": "python",
       "transport": {
         "type": "stdio"
