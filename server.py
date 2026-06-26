@@ -44,9 +44,9 @@ def _days_until(deadline: datetime) -> int:
 
 
 # Stripe Payment Links — UTM-tagged so we can attribute revenue to MCP-tool installs
-_STRIPE_STARTER = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
-_STRIPE_PRO     = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
-_STRIPE_GOV     = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_STARTER = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_PRO     = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
+_STRIPE_GOV     = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_campaign=eu_ai_act&utm_content=attest_tail"
 
 
 def _attest(data: dict) -> dict:
@@ -198,7 +198,7 @@ def check_access(api_key: str = ""):
 # Rate limiting — works with ZERO configuration. No API key needed for first
 # FREE_DAILY_LIMIT calls per day.
 # ---------------------------------------------------------------------------
-FREE_DAILY_LIMIT = 10
+FREE_DAILY_LIMIT = 50
 PRO_TIER_UNLIMITED = True  # Pro: $29/mo unlimited at https://meok.ai/mcp/eu-ai-act/pro
 _usage: dict[str, list[datetime]] = defaultdict(list)
 
@@ -711,11 +711,18 @@ def quick_scan(description: str) -> dict:
             penalty_range = "Up to EUR 15,000,000 or 3% of global annual turnover"
             deadline = "2 August 2025 (GPAI rules)"
         else:
+            # NEVER FALSE-CLEAR: a keyword scan that matches nothing is NOT a
+            # clearance. Return 'unknown' + require review rather than a
+            # confident 'minimal' (which could wrongly clear a high-risk system).
+            risk_level = "unknown"
+            matched_areas = ["No automated keyword match — this is NOT a compliance clearance"]
             top_obligations = [
-                "No mandatory obligations — voluntary codes of conduct encouraged (Article 95)",
-                "Monitor EU AI Office for delegated acts that may reclassify your system",
-                "Consider voluntary adoption of high-risk requirements for trust",
+                "No high-risk indicators were auto-detected, but a keyword scan is NOT a clearance",
+                "Run classify_ai_risk and/or a manual Annex III review before concluding minimal risk",
+                "If genuinely minimal (e.g. spam filter, recommender): voluntary codes encouraged (Article 95)",
             ]
+            penalty_range = "Undetermined — manual review required before relying on this result"
+            deadline = "Determine after manual classification"
 
     return _attest({
         "risk_level": risk_level,
@@ -841,10 +848,10 @@ def deadline_check() -> dict:
         } if watermarking_cliff else None,
         "meok_labs": "https://meok.ai",
         "buy_now": {
-            "starter_29gbp_mo": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
-            "pro_79gbp_mo": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
-            "continuous_199gbp_mo": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
-            "audit_5000gbp_one_time": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+            "starter_29gbp_mo": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
+            "pro_79gbp_mo": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
+            "continuous_199gbp_mo": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
+            "audit_5000gbp_one_time": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
         },
     }
 
@@ -968,7 +975,7 @@ def classify_ai_risk(
             result["upgrade"] = {
                 "message": f"Your system matched {len(result['prohibited_matches'])} prohibited practices. Get the full breakdown + remediation steps with MEOK Pro.",
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+                "stripe_checkout": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
                 "price": "From GBP 29/month",
             }
         return result
@@ -1014,7 +1021,7 @@ def classify_ai_risk(
             result["upgrade"] = {
                 "message": f"Your system matches {len(result['high_risk_matches'])} high-risk areas. Get the full analysis + compliance roadmap with MEOK Pro.",
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+                "stripe_checkout": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
                 "price": "From GBP 29/month",
             }
         return result
@@ -1242,7 +1249,7 @@ def check_compliance(
         result["upgrade"] = {
             "message": f"Your system scores {score:.1f}% with {failed} failing areas. Get the full 42-point checklist + remediation plan.",
             "url": "https://meok.ai/api-keys",
-            "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+            "stripe_checkout": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
             "price": "From GBP 29/month",
         }
     else:
@@ -1373,7 +1380,7 @@ def generate_documentation(
             },
             "upgrade": {
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+                "stripe_checkout": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
                 "price": "From GBP 29/month — includes unlimited documentation generation",
             },
             "free_alternative": "Use quick_scan or deadline_check (free, no API key needed) to assess your system first.",
@@ -1905,7 +1912,7 @@ def audit_report(
             },
             "upgrade": {
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+                "stripe_checkout": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
                 "price": "From GBP 29/month — includes unlimited audit reports",
             },
             "free_alternative": "Use quick_scan (free) for instant risk classification, or deadline_check for enforcement dates.",
@@ -2205,7 +2212,7 @@ def multi_jurisdiction_map(
             "supported_jurisdictions": ["EU", "UK", "Singapore", "Canada", "US (NIST)"],
             "upgrade": {
                 "url": "https://meok.ai/api-keys",
-                "stripe_checkout": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j",
+                "stripe_checkout": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t",
                 "price": "From GBP 29/month",
             },
         }
