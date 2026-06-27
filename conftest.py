@@ -12,6 +12,7 @@ This also forces the deterministic in-repo auth_middleware fallback (the
 """
 import os
 import shutil
+import sys
 import tempfile
 
 import pytest
@@ -26,4 +27,12 @@ os.environ.pop("X402_ENABLED", None)    # x402 stays off unless a test enables i
 def _fresh_usage_state():
     """Each test starts with a clean ~/.meok (usage counters + PAYG balances)."""
     shutil.rmtree(os.path.join(_TMP_HOME, ".meok"), ignore_errors=True)
+    # Pre-create the ~/.meok/data dir so compliance_neural.py can write its
+    # sqlite ledger without an OperationalError on first connect.
+    os.makedirs(os.path.join(_TMP_HOME, ".meok", "data"), exist_ok=True)
+    # Force-reload server module so the freshly-created ~/.meok path is used
+    # for the ComplianceNeuralNet DB (it cached db_path at import time).
+    if "server" in sys.modules:
+        import importlib
+        importlib.reload(sys.modules["server"])
     yield
