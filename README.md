@@ -21,9 +21,9 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyPI](https://img.shields.io/badge/PyPI-Install-3775a9)](https://pypi.org/project/eu_ai_act_compliance_mcp/)
 
-> EU AI Act compliance MCP with 404 verbatim articles from EUR-Lex
+> EU AI Act measurement corpus — 417 frozen provisions at provision-level granularity (the Act has 113 Articles; our corpus is the finer-grained provision map)
 
-EU AI Act compliance MCP with 404 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT
+EU AI Act measurement corpus — 417 frozen provisions at provision-level granularity (the Act has 113 Articles; our corpus is the finer-grained provision map). Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT
 
 ---
 
