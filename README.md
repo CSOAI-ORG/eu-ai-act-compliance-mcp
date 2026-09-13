@@ -8,11 +8,10 @@
 
 > **⚖️ Need EU AI Act readiness _for your system_, fast?** This MCP is the free tool. For a tailored
 > readiness pack + a second opinion from the team behind the [CSOAI charter](https://csoai.org),
-> book a 30-min **Founder Office Hour (£29)** → **https://meok.ai/work**
 >
-> Part of the MEOK governance platform · [meok.ai](https://meok.ai) · [csoai.org](https://csoai.org)
+> Part of the MEOK governance platform · [councilof.ai](https://councilof.ai) · [csoai.org](https://csoai.org)
 
-[![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
+[![Council of AI](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://councilof.ai)
 [![PAYG enabled](https://img.shields.io/badge/PAYG-%C2%A30.05%2Fcall-7c3aed?logo=stripe&logoColor=white&labelColor=1a1a2e)](https://councilof.ai/payg)
 [![GSPC](https://img.shields.io/badge/GSPC-live%20GET%20%2Fapi%2Fgspc-0ea5e9)](https://councilof.ai/api/gspc)
 [![Measurement](https://img.shields.io/badge/Measurement-not%20certification-64748b)](https://councilof.ai/api/gspc)
@@ -66,7 +65,7 @@ export MEOK_PAYG_KEY="your_topup_token"
 
 ## 📖 Documentation
 
-- [Full Documentation](https://meok.ai/eu-ai-act-for-legal-tech)
+- [Full Documentation](https://councilof.ai/eu-ai-act-for-legal-tech)
 - [API Reference](https://councilof.ai/api-docs)
 - [EU AI Act Compliance Guide](https://councilof.ai)
 
@@ -83,20 +82,18 @@ export MEOK_PAYG_KEY="your_topup_token"
 
 Need custom development, SLA guarantees, or white-label deployment?
 
-- **Pro:** £79/mo — Full MCP suite + EU AI Act tracking
-- **Enterprise:** £499/mo — Custom dev + SLA + Dedicated support
 
-[View Pricing →](https://councilof.ai/payg) | [Contact Sales →](mailto:sales@meok.ai)
+[View Pricing →](https://councilof.ai/payg) | [Contact Sales →](mailto:sales@councilof.ai)
 
 ## 🤝 Part of the MEOK Ecosystem
 
-This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 26 PyPI packages · ~16,300 monthly installs.
+This server is part of the **[Council of AI](https://councilof.ai)** ecosystem — 26 PyPI packages · ~public measurement tools.
 
 | Domain | Purpose |
 |--------|---------|
 | [councilof.ai](https://councilof.ai) | Independent measurement board — live `GET /api/gspc` |
 | [safetyof.ai](https://safetyof.ai) | AI safety & monitoring |
-| [meok.ai](https://meok.ai) | Shelf / frontend (not a second Council) |
+| [councilof.ai](https://councilof.ai) | Shelf / frontend (not a second Council) |
 | [cobolbridge.ai](https://cobolbridge.ai) | Legacy modernization |
 
 ## 📜 License
@@ -106,7 +103,7 @@ MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 ---
 
 <p align="center">
-  <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
+  <sub>Built with 💜 by <a href="https://councilof.ai">Council of AI</a> · UK Companies House 16939677</sub>
 </p>
 
 

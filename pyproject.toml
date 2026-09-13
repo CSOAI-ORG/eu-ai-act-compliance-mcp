@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "eu-ai-act-compliance-mcp"
 readme = "README.md"
-version = "1.8.14"
-description = "EU AI Act compliance for AI agents. 410 articles from EUR-Lex via FTS5 search. Instant risk scan, deadline tracker, 42-point audit, documentation generator, penalty calculator. Zero-config free tier. Built by MEOK AI Labs."
+version = "1.8.18"
+description = "EU AI Act measurement for AI agents. 417 provisions from EUR-Lex via FTS5 search. Risk scan, deadline tracker, provision audit. Measurement, not certification. By CSOAI Ltd (Council of AI)."
 license = {file = "LICENSE"}
 requires-python = ">=3.10"
-authors = [{name = "MEOK AI Labs", email = "hello@meok.ai"}]
+authors = [{name = "CSOAI Ltd", email = "nicholas@csoai.org"}]
 keywords = ["mcp", "mcp-server", "model-context-protocol", "ai-governance", "compliance", "eu-ai-act", "dora", "nis2", "cra", "gdpr", "meok"]
 classifiers = [
     "Programming Language :: Python :: 3",
